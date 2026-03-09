@@ -11,12 +11,14 @@ import {
   Cell,
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { RoadIssue, IssueStatus } from "@/types";
+import type { RoadIssue, DbIssueStatus } from "@/types";
+import { ISSUE_STATUS_LABELS } from "@/types";
 
-const STATUS_COLORS: Record<IssueStatus, string> = {
-  Reported: "#eab308",
-  "Submitted to NMC": "#3b82f6",
-  Resolved: "#16a34a",
+const STATUS_COLORS: Record<DbIssueStatus, string> = {
+  reported: "#eab308",
+  in_review: "#3b82f6",
+  resolved: "#16a34a",
+  rejected: "#ef4444",
 };
 
 interface StatusChartProps {
@@ -25,9 +27,9 @@ interface StatusChartProps {
 
 export function StatusChart({ issues }: StatusChartProps) {
   const data = (
-    Object.keys(STATUS_COLORS) as IssueStatus[]
+    Object.keys(STATUS_COLORS) as DbIssueStatus[]
   ).map((status) => ({
-    name: status,
+    name: ISSUE_STATUS_LABELS[status],
     count: issues.filter((i) => i.status === status).length,
     fill: STATUS_COLORS[status],
   }));
