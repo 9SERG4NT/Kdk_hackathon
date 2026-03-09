@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/table";
 import { StatusBadge } from "@/features/issues/components/StatusBadge";
 import type { RoadIssue } from "@/types";
+import { ISSUE_SEVERITY_LABELS } from "@/types";
 
 interface RecentIssuesProps {
   issues: RoadIssue[];
@@ -44,7 +45,7 @@ export function RecentIssues({ issues }: RecentIssuesProps) {
               <TableRow>
                 <TableHead>Image</TableHead>
                 <TableHead>Title</TableHead>
-                <TableHead>Category</TableHead>
+                <TableHead>Severity</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Location</TableHead>
                 <TableHead>Reported</TableHead>
@@ -75,12 +76,14 @@ export function RecentIssues({ issues }: RecentIssuesProps) {
                       {issue.title}
                     </p>
                   </TableCell>
-                  <TableCell className="text-sm">{issue.category}</TableCell>
+                  <TableCell className="text-sm">
+                    {ISSUE_SEVERITY_LABELS[issue.severity]}
+                  </TableCell>
                   <TableCell>
                     <StatusBadge status={issue.status} />
                   </TableCell>
                   <TableCell className="text-xs text-muted-foreground">
-                    {issue.latitude.toFixed(4)}, {issue.longitude.toFixed(4)}
+                    {issue.address ?? `${issue.latitude.toFixed(4)}, ${issue.longitude.toFixed(4)}`}
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground whitespace-nowrap">
                     {format(new Date(issue.created_at), "MMM d, h:mm a")}

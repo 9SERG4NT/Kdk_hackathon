@@ -26,14 +26,15 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 import Image from "next/image";
-import type { RoadIssue, IssueStatus } from "@/types";
+import type { RoadIssue, DbIssueStatus } from "@/types";
+import { ISSUE_SEVERITY_LABELS } from "@/types";
 
-type NmcFilter = "all" | "Submitted to NMC" | "Resolved";
+type NmcFilter = "all" | "in_review" | "resolved";
 
 const NMC_FILTERS: { value: NmcFilter; label: string }[] = [
   { value: "all", label: "All" },
-  { value: "Submitted to NMC", label: "Submitted to NMC" },
-  { value: "Resolved", label: "Resolved" },
+  { value: "in_review", label: "In Review" },
+  { value: "resolved", label: "Resolved" },
 ];
 
 export default function NmcDashboard() {
@@ -44,17 +45,14 @@ export default function NmcDashboard() {
   const [workerInputs, setWorkerInputs] = useState<Record<string, string>>({});
   const [previewImage, setPreviewImage] = useState<{ url: string; title: string } | null>(null);
 
-  // NMC sees issues that have been submitted to them or resolved
-  const nmcStatuses: IssueStatus[] = [
-    "Submitted to NMC",
-    "Resolved",
-  ];
+  // NMC sees issues that are in review or resolved
+  const nmcStatuses: DbIssueStatus[] = ["in_review", "resolved"];
   const nmcIssues = allIssues.filter((i) => nmcStatuses.includes(i.status));
   const filtered = filter === "all" ? nmcIssues : nmcIssues.filter((i) => i.status === filter);
 
   const counts = {
-    submittedToNmc: nmcIssues.filter((i) => i.status === "Submitted to NMC").length,
-    resolved: nmcIssues.filter((i) => i.status === "Resolved").length,
+    inReview: nmcIssues.filter((i) => i.status === "in_review").length,
+    resolved: nmcIssues.filter((i) => i.status === "resolved").length,
   };
 
   function handleAssignWorker(issue: RoadIssue) {
@@ -62,9 +60,9 @@ export default function NmcDashboard() {
     if (!workerName) return;
     updateStatus.mutate({
       id: issue.id,
-      status: "Submitted to NMC",
+      status: "in_review",
       performedBy: user?.username ?? "nmc",
-      assignedWorker: workerName,
+      assignedTo: workerName,
     });
     setWorkerInputs((prev) => ({ ...prev, [issue.id]: "" }));
   }
@@ -72,7 +70,7 @@ export default function NmcDashboard() {
   function handleResolve(issue: RoadIssue) {
     updateStatus.mutate({
       id: issue.id,
-      status: "Resolved",
+      status: "resolved",
       performedBy: user?.username ?? "nmc",
     });
   }
@@ -130,8 +128,8 @@ export default function NmcDashboard() {
       <div className="grid grid-cols-2 gap-4">
         <Card className="border-blue-100 bg-blue-50/60">
           <CardContent className="p-4">
-            <p className="text-sm text-blue-700">Submitted to NMC</p>
-            <p className="text-2xl font-bold text-blue-800">{counts.submittedToNmc}</p>
+            <p className="text-sm text-blue-700">In Review</p>
+            <p className="text-2xl font-bold text-blue-800">{counts.inReview}</p>
           </CardContent>
         </Card>
         <Card className="border-green-100 bg-green-50/60">
@@ -170,9 +168,8 @@ export default function NmcDashboard() {
               <TableRow>
                 <TableHead>Image</TableHead>
                 <TableHead>Title</TableHead>
-                <TableHead>Category</TableHead>
+                <TableHead>Severity</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>Worker</TableHead>
                 <TableHead>Date</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
@@ -180,7 +177,7 @@ export default function NmcDashboard() {
             <TableBody>
               {filtered.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
+                  <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
                     No issues found.
                   </TableCell>
                 </TableRow>
@@ -215,19 +212,11 @@ export default function NmcDashboard() {
                         {issue.description}
                       </p>
                     </TableCell>
-                    <TableCell className="text-sm">{issue.category}</TableCell>
+                    <TableCell className="text-sm">
+                      {ISSUE_SEVERITY_LABELS[issue.severity]}
+                    </TableCell>
                     <TableCell>
                       <StatusBadge status={issue.status} />
-                    </TableCell>
-                    <TableCell className="text-sm">
-                      {issue.assigned_worker ? (
-                        <div>
-                          <p className="text-xs font-semibold text-emerald-700">Worker Assigned</p>
-                          <p className="text-sm font-medium text-slate-800">{issue.assigned_worker}</p>
-                        </div>
-                      ) : (
-                        <span className="text-muted-foreground">--</span>
-                      )}
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
                       {format(new Date(issue.created_at), "MMM d, yyyy")}
@@ -267,12 +256,12 @@ function NmcActions({
   onAssign: () => void;
   onResolve: () => void;
 }) {
-  if (issue.status === "Submitted to NMC") {
-    if (issue.assigned_worker) {
+  if (issue.status === "in_review") {
+    if (issue.assigned_to) {
       return (
         <div className="flex items-center gap-2">
           <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-700 bg-amber-50 px-2 py-1 rounded-full">
-            Worker Assigned (In Process)
+            Assigned (In Process)
           </span>
           <Button size="sm" variant="outline" onClick={onResolve} className="h-8 text-xs text-green-700">
             <CheckCircle2 className="h-3.5 w-3.5 mr-1" />
@@ -298,7 +287,7 @@ function NmcActions({
       </div>
     );
   }
-  if (issue.assigned_worker) {
+  if (issue.assigned_to) {
     return (
       <span className="inline-flex items-center gap-1 text-xs font-medium text-green-700 bg-green-50 px-2 py-1 rounded-full">
         <UserPlus className="h-3 w-3" />

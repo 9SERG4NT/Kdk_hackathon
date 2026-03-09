@@ -1,5 +1,9 @@
 import { supabase } from "@/lib/supabase";
 
+/**
+ * Uploads an image to the road-issue-images bucket and returns the storage path.
+ * The caller is responsible for resolving the full URL via issueService if needed.
+ */
 export async function uploadIssueImage(file: File): Promise<string> {
   const extension = file.name.split(".").pop() ?? "jpg";
   const fileName = `${Date.now()}-${crypto.randomUUID()}.${extension}`;
@@ -14,9 +18,5 @@ export async function uploadIssueImage(file: File): Promise<string> {
 
   if (error) throw error;
 
-  const { data } = supabase.storage
-    .from("road-issue-images")
-    .getPublicUrl(path);
-
-  return data.publicUrl;
+  return path;
 }
