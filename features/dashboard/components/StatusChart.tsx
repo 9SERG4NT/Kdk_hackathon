@@ -34,7 +34,7 @@ export function StatusChart({ issues }: StatusChartProps) {
 
   if (issues.length === 0) {
     return (
-      <Card>
+      <Card className="glass-panel tilt-card">
         <CardHeader>
           <CardTitle className="text-base">By Status</CardTitle>
         </CardHeader>
@@ -46,9 +46,11 @@ export function StatusChart({ issues }: StatusChartProps) {
   }
 
   return (
-    <Card>
+    <Card className="glass-panel tilt-card">
       <CardHeader>
-        <CardTitle className="text-base">By Status</CardTitle>
+        <CardTitle className="text-base" style={{ fontFamily: "var(--font-sora)" }}>
+          By Status
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={250}>
@@ -57,7 +59,13 @@ export function StatusChart({ issues }: StatusChartProps) {
             <XAxis dataKey="name" tick={{ fontSize: 12 }} />
             <YAxis allowDecimals={false} tick={{ fontSize: 12 }} />
             <Tooltip />
-            <Bar dataKey="count" radius={[6, 6, 0, 0]}>
+            <Bar
+              dataKey="count"
+              radius={[6, 6, 0, 0]}
+              isAnimationActive
+              animationDuration={950}
+              animationBegin={160}
+            >
               {data.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.fill} />
               ))}

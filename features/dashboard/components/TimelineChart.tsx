@@ -43,9 +43,11 @@ export function TimelineChart({ issues }: TimelineChartProps) {
   }));
 
   return (
-    <Card>
+    <Card className="glass-panel tilt-card">
       <CardHeader>
-        <CardTitle className="text-base">Reports - Last 14 Days</CardTitle>
+        <CardTitle className="text-base" style={{ fontFamily: "var(--font-sora)" }}>
+          Reports - Last 14 Days
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={250}>
@@ -71,6 +73,9 @@ export function TimelineChart({ issues }: TimelineChartProps) {
               strokeWidth={2}
               fillOpacity={1}
               fill="url(#colorReports)"
+              isAnimationActive
+              animationDuration={1000}
+              animationBegin={220}
             />
           </AreaChart>
         </ResponsiveContainer>

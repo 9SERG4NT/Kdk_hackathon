@@ -26,7 +26,7 @@ export function CategoryChart({ issues }: CategoryChartProps) {
 
   if (data.length === 0) {
     return (
-      <Card>
+      <Card className="glass-panel tilt-card">
         <CardHeader>
           <CardTitle className="text-base">By Category</CardTitle>
         </CardHeader>
@@ -38,9 +38,11 @@ export function CategoryChart({ issues }: CategoryChartProps) {
   }
 
   return (
-    <Card>
+    <Card className="glass-panel tilt-card">
       <CardHeader>
-        <CardTitle className="text-base">By Category</CardTitle>
+        <CardTitle className="text-base" style={{ fontFamily: "var(--font-sora)" }}>
+          By Category
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={250}>
@@ -53,6 +55,9 @@ export function CategoryChart({ issues }: CategoryChartProps) {
               outerRadius={90}
               paddingAngle={3}
               dataKey="value"
+              isAnimationActive
+              animationDuration={900}
+              animationBegin={120}
             >
               {data.map((_entry, index) => (
                 <Cell
