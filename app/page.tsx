@@ -2,12 +2,13 @@
 
 import dynamic from "next/dynamic";
 import { useIssues } from "@/features/issues/hooks/useIssues";
+import { HeroSlideshow } from "@/features/dashboard/components/HeroSlideshow";
 import { StatsCards } from "@/features/dashboard/components/StatsCards";
 import { CategoryChart } from "@/features/dashboard/components/CategoryChart";
 import { StatusChart } from "@/features/dashboard/components/StatusChart";
 import { TimelineChart } from "@/features/dashboard/components/TimelineChart";
 import { RecentIssues } from "@/features/dashboard/components/RecentIssues";
-import { Loader2, RefreshCw } from "lucide-react";
+import { ArrowRight, Loader2, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -39,16 +40,19 @@ export default function DashboardPage() {
 
   return (
     <div className="max-w-[1400px] mx-auto px-4 py-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
+      <HeroSlideshow />
+
+      <div className="reveal-up stagger-1 flex flex-col gap-4 rounded-2xl border border-white/55 bg-white/65 p-5 shadow-[0_14px_45px_-30px_rgba(4,25,44,0.8)] backdrop-blur-xl md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-          <p className="text-sm text-muted-foreground">
-            Overview of all road issue reports collected from mobile app
+          <h2 className="text-xl font-semibold tracking-tight text-slate-900 md:text-2xl" style={{ fontFamily: "var(--font-sora)" }}>
+            Executive Control Center
+          </h2>
+          <p className="text-sm text-slate-600">
+            Live analytics and operational coverage for road issues reported from mobile devices.
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <span className="text-xs text-muted-foreground">
+          <span className="text-xs text-slate-500">
             Last updated:{" "}
             {dataUpdatedAt
               ? new Date(dataUpdatedAt).toLocaleTimeString()
@@ -62,24 +66,30 @@ export default function DashboardPage() {
             <RefreshCw className="h-4 w-4 mr-1" />
             Refresh
           </Button>
+          <a
+            href="/issues"
+            className="inline-flex items-center gap-1 text-sm font-medium text-sky-700 hover:text-sky-900"
+          >
+            Operations
+            <ArrowRight className="h-4 w-4" />
+          </a>
         </div>
       </div>
 
-      {/* Stats */}
-      <StatsCards issues={issues} />
+      <div className="reveal-up stagger-2">
+        <StatsCards issues={issues} />
+      </div>
 
-      {/* Charts row */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="reveal-up stagger-3 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         <CategoryChart issues={issues} />
         <StatusChart issues={issues} />
         <TimelineChart issues={issues} />
       </div>
 
-      {/* Map overview */}
-      <Card>
+      <Card className="reveal-up stagger-4 overflow-hidden border-white/60 bg-white/75 shadow-[0_14px_45px_-32px_rgba(4,25,44,0.85)] backdrop-blur-xl">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-base">Issue Locations</CardTitle>
-          <a href="/map" className="text-sm text-primary hover:underline">
+          <a href="/map" className="text-sm text-primary hover:underline underline-offset-4">
             Full map view
           </a>
         </CardHeader>
@@ -90,8 +100,9 @@ export default function DashboardPage() {
         </CardContent>
       </Card>
 
-      {/* Recent issues table */}
-      <RecentIssues issues={issues} />
+      <div className="reveal-up stagger-4">
+        <RecentIssues issues={issues} />
+      </div>
     </div>
   );
 }

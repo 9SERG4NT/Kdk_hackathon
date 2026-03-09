@@ -22,12 +22,12 @@ export function RecentIssues({ issues }: RecentIssuesProps) {
   const recent = issues.slice(0, 8);
 
   return (
-    <Card>
+    <Card className="border-white/60 bg-white/75 shadow-[0_14px_45px_-32px_rgba(4,25,44,0.85)] backdrop-blur-xl">
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle className="text-base">Recent Reports from Mobile App</CardTitle>
         <a
           href="/issues"
-          className="text-sm text-primary hover:underline"
+          className="text-sm text-primary hover:underline underline-offset-4"
         >
           View all
         </a>

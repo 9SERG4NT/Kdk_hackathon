@@ -1,9 +1,17 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Manrope, Sora } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 
-const inter = Inter({ subsets: ["latin"] });
+const manrope = Manrope({
+  subsets: ["latin"],
+  variable: "--font-manrope",
+});
+
+const sora = Sora({
+  subsets: ["latin"],
+  variable: "--font-sora",
+});
 
 export const metadata: Metadata = {
   title: "RoadWatch Admin - Nagpur",
@@ -18,29 +26,30 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${manrope.variable} ${sora.variable}`}>
         <Providers>
-          <nav className="border-b bg-white/80 backdrop-blur sticky top-0 z-50">
+          <div className="app-shell">
+          <nav className="premium-nav sticky top-0 z-50">
             <div className="max-w-[1400px] mx-auto px-4 h-14 flex items-center justify-between">
-              <a href="/" className="font-bold text-lg">
+              <a href="/" className="font-semibold text-lg tracking-tight" style={{ fontFamily: "var(--font-sora)" }}>
                 RoadWatch Admin
               </a>
               <div className="flex gap-6 text-sm">
                 <a
                   href="/"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  className="premium-nav-link text-muted-foreground hover:text-foreground"
                 >
                   Dashboard
                 </a>
                 <a
                   href="/issues"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  className="premium-nav-link text-muted-foreground hover:text-foreground"
                 >
                   Issues
                 </a>
                 <a
                   href="/map"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  className="premium-nav-link text-muted-foreground hover:text-foreground"
                 >
                   Map
                 </a>
@@ -48,6 +57,7 @@ export default function RootLayout({
             </div>
           </nav>
           {children}
+          </div>
         </Providers>
       </body>
     </html>

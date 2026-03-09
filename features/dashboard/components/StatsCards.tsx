@@ -60,16 +60,20 @@ export function StatsCards({ issues }: StatsCardsProps) {
 
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-      {stats.map((stat) => (
-        <Card key={stat.label}>
+      {stats.map((stat, index) => (
+        <Card
+          key={stat.label}
+          className="reveal-up border-white/60 bg-white/75 shadow-[0_14px_40px_-30px_rgba(5,26,46,0.9)] backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1"
+          style={{ animationDelay: `${140 + index * 90}ms` }}
+        >
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className={`rounded-lg p-2.5 ${stat.bgColor} ${stat.color}`}>
+              <div className={`rounded-xl p-2.5 ${stat.bgColor} ${stat.color}`}>
                 {stat.icon}
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">{stat.label}</p>
-                <p className="text-2xl font-bold">{stat.value}</p>
+                <p className="text-sm text-slate-500">{stat.label}</p>
+                <p className="text-2xl font-semibold text-slate-900">{stat.value}</p>
               </div>
             </div>
           </CardContent>
