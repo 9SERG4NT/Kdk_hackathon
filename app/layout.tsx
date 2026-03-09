@@ -3,6 +3,7 @@ import { Manrope, Sora } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import { FirstLoadSplash } from "@/components/system/FirstLoadSplash";
+import { RouteTransition } from "@/components/system/RouteTransition";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -58,7 +59,7 @@ export default function RootLayout({
                 </div>
               </div>
             </nav>
-            {children}
+            <RouteTransition>{children}</RouteTransition>
           </div>
         </Providers>
       </body>

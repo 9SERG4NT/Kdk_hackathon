@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import {
   AlertTriangle,
   CheckCircle2,
@@ -73,7 +74,9 @@ export function StatsCards({ issues }: StatsCardsProps) {
               </div>
               <div>
                 <p className="text-sm text-slate-500">{stat.label}</p>
-                <p className="text-2xl font-semibold text-slate-900">{stat.value}</p>
+                <p className="text-2xl font-semibold text-slate-900">
+                  <AnimatedCount value={stat.value} />
+                </p>
               </div>
             </div>
           </CardContent>
@@ -81,4 +84,35 @@ export function StatsCards({ issues }: StatsCardsProps) {
       ))}
     </div>
   );
+}
+
+function AnimatedCount({ value }: { value: number }) {
+  const [display, setDisplay] = useState(0);
+  const previous = useRef(0);
+
+  useEffect(() => {
+    const startValue = previous.current;
+    const duration = 900;
+    const start = performance.now();
+    let frameId = 0;
+
+    const tick = (now: number) => {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = Math.round(startValue + (value - startValue) * eased);
+      setDisplay(current);
+
+      if (progress < 1) {
+        frameId = window.requestAnimationFrame(tick);
+      } else {
+        previous.current = value;
+      }
+    };
+
+    frameId = window.requestAnimationFrame(tick);
+    return () => window.cancelAnimationFrame(frameId);
+  }, [value]);
+
+  return <>{display}</>;
 }
