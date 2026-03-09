@@ -45,7 +45,7 @@ export function IssueForm() {
   });
 
   async function onSubmit(values: CreateIssueInput) {
-    if (!geo.latitude || !geo.longitude) {
+    if (geo.latitude == null || geo.longitude == null) {
       geo.requestLocation();
       return;
     }
