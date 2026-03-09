@@ -3,7 +3,7 @@
     "name": "CivicReport",
     "slug": "CivicReport",
     "version": "1.0.0",
-    "sdkVersion": "55.0.0",
+    "sdkVersion": "54.0.0",
     "scheme": "civicreport",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

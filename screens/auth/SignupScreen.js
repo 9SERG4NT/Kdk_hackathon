@@ -4,6 +4,7 @@ import {
   StyleSheet, Alert, KeyboardAvoidingView, Platform, ActivityIndicator,
   ScrollView,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../../context/AuthContext';
 
 export default function SignupScreen({ navigation }) {
@@ -42,6 +43,10 @@ export default function SignupScreen({ navigation }) {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
+        <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={24} color="#1e293b" />
+        </TouchableOpacity>
+
         <View style={styles.header}>
           <Text style={styles.emoji}>📝</Text>
           <Text style={styles.title}>Create Account</Text>
@@ -52,14 +57,14 @@ export default function SignupScreen({ navigation }) {
           <TextInput
             style={styles.input}
             placeholder="Full Name"
-            placeholderTextColor="#888"
+            placeholderTextColor="#94a3b8"
             value={fullName}
             onChangeText={setFullName}
           />
           <TextInput
             style={styles.input}
             placeholder="Email address"
-            placeholderTextColor="#888"
+            placeholderTextColor="#94a3b8"
             value={email}
             onChangeText={setEmail}
             autoCapitalize="none"
@@ -68,7 +73,7 @@ export default function SignupScreen({ navigation }) {
           <TextInput
             style={styles.input}
             placeholder="Password (min 6 characters)"
-            placeholderTextColor="#888"
+            placeholderTextColor="#94a3b8"
             value={password}
             onChangeText={setPassword}
             secureTextEntry
@@ -100,71 +105,45 @@ export default function SignupScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#0F172A',
+  container: { flex: 1, backgroundColor: '#f6f7f6' },
+  scroll: { flexGrow: 1, justifyContent: 'center', paddingHorizontal: 28 },
+  backBtn: {
+    position: 'absolute', top: 56, left: 0,
+    width: 40, height: 40, borderRadius: 20,
+    backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center',
+    shadowColor: '#000', shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05, shadowRadius: 4, elevation: 2,
   },
-  scroll: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 28,
-  },
-  header: {
-    alignItems: 'center',
-    marginBottom: 40,
-  },
-  emoji: {
-    fontSize: 56,
-    marginBottom: 12,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: '800',
-    color: '#F8FAFC',
-  },
-  subtitle: {
-    fontSize: 14,
-    color: '#94A3B8',
-    marginTop: 6,
-  },
-  form: {
-    gap: 14,
-  },
+  header: { alignItems: 'center', marginBottom: 36 },
+  emoji: { fontSize: 48, marginBottom: 8 },
+  title: { fontSize: 28, fontWeight: '800', color: '#1e293b' },
+  subtitle: { fontSize: 14, color: '#94a3b8', marginTop: 6 },
+  form: { gap: 14 },
   input: {
-    backgroundColor: '#1E293B',
-    borderRadius: 12,
+    backgroundColor: '#fff',
+    borderRadius: 14,
     paddingHorizontal: 18,
     paddingVertical: 16,
     fontSize: 16,
-    color: '#F8FAFC',
+    color: '#1e293b',
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: '#e2e8f0',
   },
   button: {
-    backgroundColor: '#6366F1',
-    borderRadius: 12,
+    backgroundColor: '#4cae4f',
+    borderRadius: 14,
     paddingVertical: 16,
     alignItems: 'center',
     marginTop: 8,
+    shadowColor: '#4cae4f',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 4,
   },
-  buttonDisabled: {
-    opacity: 0.6,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 17,
-    fontWeight: '700',
-  },
-  linkButton: {
-    alignItems: 'center',
-    marginTop: 16,
-  },
-  linkText: {
-    color: '#94A3B8',
-    fontSize: 14,
-  },
-  linkBold: {
-    color: '#6366F1',
-    fontWeight: '700',
-  },
+  buttonDisabled: { opacity: 0.6 },
+  buttonText: { color: '#fff', fontSize: 17, fontWeight: '700' },
+  linkButton: { alignItems: 'center', marginTop: 16 },
+  linkText: { color: '#94a3b8', fontSize: 14 },
+  linkBold: { color: '#4cae4f', fontWeight: '700' },
 });

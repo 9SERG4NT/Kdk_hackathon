@@ -1,0 +1,2 @@
+-- Optional seed data for local development.
+-- Keep this file present because supabase/config.toml enables seeding.

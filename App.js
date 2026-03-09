@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
 // Auth screens
+import OnboardingScreen from './screens/auth/OnboardingScreen';
 import LoginScreen from './screens/auth/LoginScreen';
 import SignupScreen from './screens/auth/SignupScreen';
 
@@ -15,9 +16,14 @@ import HomeScreen from './screens/citizen/HomeScreen';
 import ReportIssueScreen from './screens/citizen/ReportIssueScreen';
 import IssueDetailScreen from './screens/citizen/IssueDetailScreen';
 import MapScreen from './screens/citizen/MapScreen';
+import LeaderboardScreen from './screens/citizen/LeaderboardScreen';
+import ProfileScreen from './screens/citizen/ProfileScreen';
 
 // Admin screen
 import AdminDashboard from './screens/admin/AdminDashboard';
+
+// NMC screen
+import NMCDashboard from './screens/nmc/NMCDashboard';
 
 // Worker screen
 import WorkerDashboard from './screens/worker/WorkerDashboard';
@@ -31,14 +37,20 @@ function CitizenTabs() {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: '#1E293B',
-          borderTopColor: '#334155',
+          backgroundColor: '#fff',
+          borderTopColor: '#e2e8f0',
           paddingBottom: 6,
+          paddingTop: 4,
           height: 60,
+          elevation: 8,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: -2 },
+          shadowOpacity: 0.05,
+          shadowRadius: 8,
         },
-        tabBarActiveTintColor: '#6366F1',
-        tabBarInactiveTintColor: '#64748B',
-        tabBarLabelStyle: { fontSize: 11, fontWeight: '600' },
+        tabBarActiveTintColor: '#4cae4f',
+        tabBarInactiveTintColor: '#94a3b8',
+        tabBarLabelStyle: { fontSize: 10, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 },
       }}
     >
       <Tab.Screen
@@ -51,6 +63,15 @@ function CitizenTabs() {
         }}
       />
       <Tab.Screen
+        name="Report"
+        component={ReportIssueScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="add-circle" size={size + 4} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
         name="Map"
         component={MapScreen}
         options={{
@@ -59,37 +80,59 @@ function CitizenTabs() {
           ),
         }}
       />
+      <Tab.Screen
+        name="Ranking"
+        component={LeaderboardScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="trophy" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="person" size={size} color={color} />
+          ),
+        }}
+      />
     </Tab.Navigator>
   );
 }
 
 function AppNavigator() {
-  const { user, profile, loading } = useAuth();
+  const { user, profile, loading, isGuest } = useAuth();
 
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#6366F1" />
+        <ActivityIndicator size="large" color="#4cae4f" />
       </View>
     );
   }
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {!user ? (
+      {!user && !isGuest ? (
         // Auth Stack
         <>
+          <Stack.Screen name="Onboarding" component={OnboardingScreen} />
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Signup" component={SignupScreen} />
         </>
       ) : profile?.role === 'admin' ? (
         // Admin Stack
         <Stack.Screen name="AdminDashboard" component={AdminDashboard} />
+      ) : profile?.role === 'nmc' ? (
+        // NMC Stack
+        <Stack.Screen name="NMCDashboard" component={NMCDashboard} />
       ) : profile?.role === 'worker' ? (
         // Worker Stack
         <Stack.Screen name="WorkerDashboard" component={WorkerDashboard} />
       ) : (
-        // Citizen Stack
+        // Citizen Stack (both logged-in and guest)
         <>
           <Stack.Screen name="CitizenTabs" component={CitizenTabs} />
           <Stack.Screen name="ReportIssue" component={ReportIssueScreen} />
@@ -113,7 +156,7 @@ export default function App() {
 const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,
-    backgroundColor: '#0F172A',
+    backgroundColor: '#f6f7f6',
     alignItems: 'center',
     justifyContent: 'center',
   },
