@@ -10,7 +10,7 @@ export const ISSUE_CATEGORIES = [
 
 export const ISSUE_STATUSES = [
   "Reported",
-  "In Progress",
+  "Submitted to NMC",
   "Resolved",
 ] as const;
 

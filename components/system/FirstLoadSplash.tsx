@@ -3,17 +3,24 @@
 import { useEffect, useState } from "react";
 import { Leaf } from "lucide-react";
 
+const SPLASH_KEY = "civicapp_splash_shown";
+
 export function FirstLoadSplash() {
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return !sessionStorage.getItem(SPLASH_KEY);
+  });
   const [closing, setClosing] = useState(false);
 
   useEffect(() => {
+    if (!visible) return;
+    sessionStorage.setItem(SPLASH_KEY, "1");
     const timer = setTimeout(() => {
       setClosing(true);
       setTimeout(() => setVisible(false), 650);
     }, 2200);
     return () => clearTimeout(timer);
-  }, []);
+  }, [visible]);
 
   if (!visible) return null;
 
@@ -27,7 +34,7 @@ export function FirstLoadSplash() {
           <Leaf className="h-8 w-8 text-white" />
         </div>
         <p className="splash-kicker">Civic Intelligence Platform</p>
-        <h1 className="splash-title">CivicApp</h1>
+        <h1 className="splash-title">Civic Reporter</h1>
         <p className="splash-subtitle">Empowering communities, one report at a time</p>
         <div className="splash-loader-track">
           <span className="splash-loader-bar" />

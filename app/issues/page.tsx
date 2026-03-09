@@ -9,7 +9,7 @@ export default function IssuesPage() {
   const { data: issues = [], isLoading, refetch } = useIssues();
 
   const reported = issues.filter((i) => i.status === "Reported").length;
-  const inProgress = issues.filter((i) => i.status === "In Progress").length;
+  const submittedToNmc = issues.filter((i) => i.status === "Submitted to NMC").length;
   const resolved = issues.filter((i) => i.status === "Resolved").length;
 
   return (
@@ -18,7 +18,7 @@ export default function IssuesPage() {
         <div>
           <h1 className="text-2xl font-bold">Manage Issues</h1>
           <p className="text-sm text-muted-foreground">
-            View and update status of all reports from mobile app
+            View reports, submit to NMC, and track full workflow progress
           </p>
         </div>
         <Button variant="outline" size="sm" onClick={() => refetch()}>
@@ -32,9 +32,9 @@ export default function IssuesPage() {
           <p className="text-sm text-yellow-700">Reported</p>
           <p className="text-2xl font-bold text-yellow-800">{reported}</p>
         </div>
-        <div className="rounded-lg border bg-emerald-50 p-4">
-          <p className="text-sm text-emerald-700">In Progress</p>
-          <p className="text-2xl font-bold text-emerald-800">{inProgress}</p>
+        <div className="rounded-lg border bg-blue-50 p-4">
+          <p className="text-sm text-blue-700">Submitted to NMC</p>
+          <p className="text-2xl font-bold text-blue-800">{submittedToNmc}</p>
         </div>
         <div className="rounded-lg border bg-green-50 p-4">
           <p className="text-sm text-green-700">Resolved</p>

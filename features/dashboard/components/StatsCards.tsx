@@ -25,7 +25,7 @@ interface StatItem {
 export function StatsCards({ issues }: StatsCardsProps) {
   const total = issues.length;
   const reported = issues.filter((i) => i.status === "Reported").length;
-  const inProgress = issues.filter((i) => i.status === "In Progress").length;
+  const submittedToNmc = issues.filter((i) => i.status === "Submitted to NMC").length;
   const resolved = issues.filter((i) => i.status === "Resolved").length;
 
   const stats: StatItem[] = [
@@ -44,11 +44,11 @@ export function StatsCards({ issues }: StatsCardsProps) {
       bgColor: "bg-yellow-50",
     },
     {
-      label: "In Progress",
-      value: inProgress,
+      label: "Submitted to NMC",
+      value: submittedToNmc,
       icon: <Clock className="h-5 w-5" />,
-      color: "text-emerald-700",
-      bgColor: "bg-emerald-50",
+      color: "text-blue-700",
+      bgColor: "bg-blue-50",
     },
     {
       label: "Resolved",

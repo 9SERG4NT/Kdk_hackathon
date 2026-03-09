@@ -1,110 +1,147 @@
-# Crowdsourced Road Issue System
+# Civic Reporter
 
-Empowering citizens to report road issues quickly and helping administrators track and resolve them efficiently.
+Civic Reporter is a Next.js + Supabase web application for reporting civic issues and managing resolution workflows for authorities.
 
-## Table of Contents
+## Overview
 
-- [Problem Statement](#-problem-statement)
-- [Solution Overview](#-solution-overview)
-- [Key Features](#-key-features)
-- [Technology Stack](#-technology-stack)
-- [System Architecture](#-system-architecture)
-- [Project Structure](#-project-structure)
-- [Impact & Metrics](#-impact--metrics)
+The platform provides:
 
-## 🎯 Problem Statement
+- A landing page with video background and role-based access flow.
+- Admin dashboard for analytics and issue management.
+- NMC operations dashboard for assignment and resolution actions.
+- Map-based issue visualization using Leaflet.
+- Activity log tracking for status changes.
 
-**Crowdsourced Road Issue Reporting System**  
-Develop a web app where users upload road issues with images and location; include admin tracking dashboard.
+## Current Workflow
 
-## 💡 Solution Overview
+Issue lifecycle currently uses 3 statuses:
 
-Crowdsourced Road Issue System is a web-based platform for reporting road problems (e.g., potholes, damaged surfaces, blocked drains) using images and precise location. It combines geolocation, media uploads, and an admin dashboard so authorities can prioritize, track, and resolve issues transparently.
+1. `Reported`
+2. `Submitted to NMC`
+3. `Resolved`
 
-**Core Value Propositions:**
+Operational note:
 
-- **Fast reporting** with image + location capture
-- **Admin dashboard** for tracking status and performance
-- **Map-based discovery** to view issues by area
-- **Offline-friendly workflow** for unreliable connectivity (optional)
-- **Community engagement** via upvotes/comments (optional)
+- NMC can assign a worker name while issue is in `Submitted to NMC`.
+- Once assigned, UI shows `Worker Assigned (In Process)`.
+- NMC then uses `Mark Resolved` to move issue to `Resolved`.
 
-## ✨ Key Features
+## Roles and Login
 
-### 📸 Issue Reporting (Citizen)
+This project currently uses hardcoded auth for demo/hackathon use:
 
-- Upload **images/videos** as evidence
-- Add **description** and **category** (pothole, road damage, etc.)
-- Capture **GPS location** and show on map
-- Track status: *Reported → In Review → In Progress → Resolved*
+- Admin: `admin` / `123`
+- NMC: `nmc` / `123`
 
-### 📍 Mapping & Discovery
+Role routing:
 
-- Interactive map with **markers** for reported issues
-- Filters by **category**, **status**, **distance**, or **area**
-- Issue detail view with media carousel and location
+- Admin -> `/dashboard`
+- NMC -> `/nmc`
 
-### 📊 Admin Tracking Dashboard
+## Tech Stack
 
-- Total reports, open vs resolved, and average resolution time
-- Ward/area-wise issue density (heat map)
-- Category trends and priority insights
-- Status updates and assignment workflow
+- Next.js 14 (App Router)
+- TypeScript
+- Tailwind CSS
+- TanStack Query
+- Supabase (Database, Storage, Edge Functions)
+- Leaflet + react-leaflet
+- Recharts
 
-### 🔄 Offline Support (Optional)
+## Routes
 
-- Cache reports locally when offline
-- Auto-sync when connection is restored
+- `/` -> Landing page
+- `/login` -> Login page
+- `/dashboard` -> Admin dashboard
+- `/issues` -> Admin issue table and controls
+- `/map` -> Geographic issue map
+- `/nmc` -> NMC operations panel
+- `/admin` -> Redirects to `/dashboard`
 
-### 👥 Community Engagement (Optional)
-
-- Upvotes to help prioritize important issues
-- Comments for additional context and updates
-
-## 🛠 Technology Stack
-
-### Frontend
-
-- **React** — Component-based UI
-- **TypeScript** — Type-safe development
-- **Vite** — Fast build tool and dev server
-- **Tailwind CSS** — Utility-first styling
-
-### Backend (BaaS)
-
-- **Supabase**
-  - **Auth** for user/admin login
-  - **Postgres Database** for reports, comments, status history
-  - **Storage** for images/videos
-  - **Realtime** for live updates to the dashboard (optional)
-
-### Mapping & Geolocation
-
-- **Leaflet** + **OpenStreetMap**
-
-## 🏗 System Architecture
+## Project Structure
 
 ```text
-┌─────────────────────────────────────────────────────────────┐
-│                      User Interface Layer                    │
-│  ┌────────────┐  ┌────────────┐  ┌────────────┐            │
-│  │   Citizen  │  │   Report   │  │   Admin    │            │
-│  │   Feed     │  │   Form     │  │ Dashboard  │            │
-│  └────────────┘  └────────────┘  └────────────┘            │
-└─────────────────────────────────────────────────────────────┘
-                           ↕
-┌─────────────────────────────────────────────────────────────┐
-│                    Application Logic Layer                   │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │ Validation   │  │ Geolocation  │  │ Analytics    │      │
-│  │ & Upload     │  │ + Mapping    │  │ Aggregation  │      │
-│  └──────────────┘  └──────────────┘  └──────────────┘      │
-└─────────────────────────────────────────────────────────────┘
-                           ↕
-┌─────────────────────────────────────────────────────────────┐
-│                           Data Layer                         │
-│  ┌──────────────┐            ┌──────────────────────────┐    │
-│  │ Local Cache  │            │ Supabase (Auth/DB/Storage│    │
-│  │ (Optional)   │            │ + Realtime)              │    │
-│  └──────────────┘            └──────────────────────────┘    │
-└─────────────────────────────────────────────────────────────┘
+app/
+  page.tsx                # Landing page
+  login/page.tsx          # Login
+  dashboard/page.tsx      # Admin dashboard
+  issues/page.tsx         # Admin issue management
+  nmc/page.tsx            # NMC operations
+  map/page.tsx            # Map view
+
+features/
+  dashboard/components/   # Charts and dashboard widgets
+  issues/components/      # Tables, forms, timeline
+  issues/hooks/           # React Query hooks
+  issues/services/        # Supabase API service layer
+
+components/system/
+  AppNavbar.tsx
+  AuthGuard.tsx
+  FirstLoadSplash.tsx
+  RouteTransition.tsx
+
+supabase/
+  functions/              # Edge functions
+  migrations/             # SQL migrations
+```
+
+## Environment Variables
+
+Create `.env.local` with:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+```
+
+## Running the Project
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start frontend:
+
+```bash
+npm run dev
+```
+
+Default dev URL:
+
+- `http://localhost:3000` (or configured port such as `3006`)
+
+## Backend Notes (Docker vs Cloud)
+
+This repo supports 2 backend modes:
+
+1. Local Supabase (requires Docker Desktop)
+2. Supabase Cloud (no Docker needed)
+
+If Docker is unavailable, frontend can still work against Supabase Cloud as long as `.env.local` points to your cloud project.
+
+## Edge Functions
+
+Current functions in this project:
+
+- `create-issue`
+- `admin-update-issue`
+- `admin-dashboard`
+
+Deploy example:
+
+```bash
+supabase functions deploy create-issue --project-ref <project-ref>
+supabase functions deploy admin-update-issue --project-ref <project-ref>
+supabase functions deploy admin-dashboard --project-ref <project-ref>
+```
+
+## Migration Note
+
+Workflow/activity migration file:
+
+- `supabase/migrations/20260309050000_workflow_and_activity.sql`
+
+Apply migrations to remote DB before relying on activity logs and worker assignment features.

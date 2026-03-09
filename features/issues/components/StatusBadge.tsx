@@ -11,9 +11,9 @@ const statusConfig: Record<
     label: "Reported",
     className: "bg-yellow-100 text-yellow-800 border-yellow-300",
   },
-  "In Progress": {
-    label: "In Progress",
-    className: "bg-emerald-100 text-emerald-800 border-emerald-300",
+  "Submitted to NMC": {
+    label: "Submitted to NMC",
+    className: "bg-blue-100 text-blue-800 border-blue-300",
   },
   Resolved: {
     label: "Resolved",
