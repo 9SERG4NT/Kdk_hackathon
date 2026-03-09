@@ -17,9 +17,10 @@ CREATE TABLE IF NOT EXISTS activity_logs (
 -- Enable RLS
 ALTER TABLE activity_logs ENABLE ROW LEVEL SECURITY;
 
--- Allow public read/write for activity_logs (same pattern as road_issues)
-CREATE POLICY "Allow public read activity_logs" ON activity_logs
-  FOR SELECT USING (true);
+-- Allow authenticated read for activity_logs
+CREATE POLICY "Allow authenticated read activity_logs" ON activity_logs
+  FOR SELECT TO authenticated USING (true);
 
-CREATE POLICY "Allow public insert activity_logs" ON activity_logs
-  FOR INSERT WITH CHECK (true);
+-- Allow authenticated insert for activity_logs (tied to issue reporters and admins via app logic)
+CREATE POLICY "Allow authenticated insert activity_logs" ON activity_logs
+  FOR INSERT TO authenticated WITH CHECK (true);
