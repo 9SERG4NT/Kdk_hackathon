@@ -9,9 +9,10 @@ export const ISSUE_CATEGORIES = [
 ] as const;
 
 export const ISSUE_STATUSES = [
-  "Reported",
-  "Submitted to NMC",
-  "Resolved",
+  "reported",
+  "in_review",
+  "resolved",
+  "rejected",
 ] as const;
 
 export const createIssueSchema = z.object({
