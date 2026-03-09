@@ -17,18 +17,18 @@ const SEVERITY_FILTERS = [
   { key: 'low', label: 'Low', color: '#22C55E' },
 ];
 
-// Hardcoded issues for demo (same as admin dashboard)
+// Hardcoded issues for demo — Nagpur locations
 const HARDCODED_ISSUES = [
-  { id: 'h1', title: 'Large pothole on MG Road', category: 'pothole', severity: 'high', status: 'reported', latitude: 12.9716, longitude: 77.5946, vote_count: 12, description: 'Deep pothole near bus stop' },
-  { id: 'h2', title: 'Garbage dump near park', category: 'garbage', severity: 'medium', status: 'in_review', latitude: 12.9352, longitude: 77.6245, vote_count: 8, description: 'Overflowing garbage bin' },
-  { id: 'h3', title: 'Street light not working', category: 'streetlight', severity: 'high', status: 'reported', latitude: 12.9698, longitude: 77.7500, vote_count: 15, description: 'Dark block at night' },
-  { id: 'h4', title: 'Water pipe burst', category: 'water_leakage', severity: 'critical', status: 'in_review', latitude: 12.9850, longitude: 77.5533, vote_count: 22, description: 'Water flowing on road' },
-  { id: 'h5', title: 'Broken footpath tiles', category: 'road_damage', severity: 'medium', status: 'resolved', latitude: 12.9550, longitude: 77.5900, vote_count: 6, description: 'Tripping hazard' },
-  { id: 'h6', title: 'Open manhole', category: 'sewage', severity: 'critical', status: 'reported', latitude: 12.9400, longitude: 77.6150, vote_count: 19, description: 'Near school zone' },
-  { id: 'h7', title: 'Fallen tree blocking road', category: 'public_safety', severity: 'high', status: 'resolved', latitude: 12.9780, longitude: 77.6400, vote_count: 28, description: 'One lane blocked' },
-  { id: 'h8', title: 'Illegal dumping near lake', category: 'garbage', severity: 'high', status: 'reported', latitude: 12.9250, longitude: 77.6700, vote_count: 35, description: 'Construction debris' },
-  { id: 'h9', title: 'Cracked road surface', category: 'road_damage', severity: 'medium', status: 'reported', latitude: 12.9600, longitude: 77.6000, vote_count: 4, description: 'Road crumbling' },
-  { id: 'h10', title: 'Leaking fire hydrant', category: 'water_leakage', severity: 'low', status: 'reported', latitude: 12.9500, longitude: 77.5700, vote_count: 3, description: 'Slow leak' },
+  { id: 'h1', title: 'Large pothole on Wardha Road', category: 'pothole', severity: 'high', status: 'reported', latitude: 21.1250, longitude: 79.0750, vote_count: 12, description: 'Deep pothole near Ajni Square bus stop' },
+  { id: 'h2', title: 'Garbage dump near Ambazari Garden', category: 'garbage', severity: 'medium', status: 'in_review', latitude: 21.1350, longitude: 79.0550, vote_count: 8, description: 'Overflowing garbage bin near park entrance' },
+  { id: 'h3', title: 'Street light not working in Dharampeth', category: 'streetlight', severity: 'high', status: 'reported', latitude: 21.1500, longitude: 79.0700, vote_count: 15, description: 'Entire block dark at night' },
+  { id: 'h4', title: 'Water pipe burst on Sitabuldi Main Road', category: 'water_leakage', severity: 'critical', status: 'in_review', latitude: 21.1458, longitude: 79.0820, vote_count: 22, description: 'Water flowing on road for 2 hours' },
+  { id: 'h5', title: 'Broken footpath tiles at Sadar', category: 'road_damage', severity: 'medium', status: 'resolved', latitude: 21.1550, longitude: 79.0900, vote_count: 6, description: 'Tripping hazard on main footpath' },
+  { id: 'h6', title: 'Open manhole near Hislop College', category: 'sewage', severity: 'critical', status: 'reported', latitude: 21.1400, longitude: 79.0850, vote_count: 19, description: 'Uncovered manhole near school zone' },
+  { id: 'h7', title: 'Fallen tree blocking Hingna Road', category: 'public_safety', severity: 'high', status: 'resolved', latitude: 21.1200, longitude: 79.0400, vote_count: 28, description: 'One lane blocked after storm' },
+  { id: 'h8', title: 'Illegal dumping near Futala Lake', category: 'garbage', severity: 'high', status: 'reported', latitude: 21.1580, longitude: 79.0480, vote_count: 35, description: 'Construction debris dumped near lake' },
+  { id: 'h9', title: 'Cracked road surface at Manewada', category: 'road_damage', severity: 'medium', status: 'reported', latitude: 21.1100, longitude: 79.1100, vote_count: 4, description: 'Road surface crumbling' },
+  { id: 'h10', title: 'Leaking fire hydrant at Civil Lines', category: 'water_leakage', severity: 'low', status: 'reported', latitude: 21.1600, longitude: 79.0750, vote_count: 3, description: 'Slow leak near main junction' },
 ];
 
 export default function MapScreen({ navigation }) {
@@ -87,8 +87,8 @@ export default function MapScreen({ navigation }) {
       <MapView
         style={StyleSheet.absoluteFillObject}
         initialRegion={{
-          latitude: 12.9550,
-          longitude: 77.6200,
+          latitude: 21.1458,
+          longitude: 79.0882,
           latitudeDelta: 0.12,
           longitudeDelta: 0.12,
         }}

@@ -14,21 +14,21 @@ const { width } = Dimensions.get('window');
 
 // Dummy workers
 const WORKERS = [
-  { id: 'w1', name: 'Ramesh Kumar', zone: 'Zone A - MG Road', available: true, tasksCompleted: 45 },
-  { id: 'w2', name: 'Suresh Babu', zone: 'Zone B - Koramangala', available: true, tasksCompleted: 38 },
-  { id: 'w3', name: 'Venkatesh R.', zone: 'Zone C - Whitefield', available: false, tasksCompleted: 52 },
-  { id: 'w4', name: 'Prakash Rao', zone: 'Zone D - Jayanagar', available: true, tasksCompleted: 29 },
-  { id: 'w5', name: 'Gopal Singh', zone: 'Zone E - HSR Layout', available: true, tasksCompleted: 41 },
-  { id: 'w6', name: 'Dinesh M.', zone: 'Zone F - Indiranagar', available: false, tasksCompleted: 36 },
+  { id: 'w1', name: 'Ramesh Kumar', zone: 'Zone A - Sitabuldi', available: true, tasksCompleted: 45 },
+  { id: 'w2', name: 'Suresh Babu', zone: 'Zone B - Dharampeth', available: true, tasksCompleted: 38 },
+  { id: 'w3', name: 'Venkatesh R.', zone: 'Zone C - Sadar', available: false, tasksCompleted: 52 },
+  { id: 'w4', name: 'Prakash Rao', zone: 'Zone D - Civil Lines', available: true, tasksCompleted: 29 },
+  { id: 'w5', name: 'Gopal Singh', zone: 'Zone E - Manewada', available: true, tasksCompleted: 41 },
+  { id: 'w6', name: 'Dinesh M.', zone: 'Zone F - Hingna', available: false, tasksCompleted: 36 },
 ];
 
 // Issues forwarded from Admin (some dummy + DB)
 const DUMMY_FORWARDED = [
-  { id: 'nf1', title: 'Large pothole on MG Road', description: 'Deep pothole near bus stop causing traffic issues', category: 'pothole', severity: 'high', status: 'forwarded_nmc', latitude: 12.9716, longitude: 77.5946, address: 'MG Road, Bengaluru', reporter_name: 'Aarav S.', vote_count: 12, assigned_worker: null },
-  { id: 'nf2', title: 'Water pipe burst on main road', description: 'Water flowing on road for 2 hours', category: 'water_leakage', severity: 'critical', status: 'forwarded_nmc', latitude: 12.9850, longitude: 77.5533, address: 'Malleshwaram, Bengaluru', reporter_name: 'Sneha I.', vote_count: 22, assigned_worker: null },
-  { id: 'nf3', title: 'Open manhole on side road', description: 'Uncovered manhole near school zone', category: 'sewage', severity: 'critical', status: 'forwarded_nmc', latitude: 12.9400, longitude: 77.6150, address: 'HSR Layout, Bengaluru', reporter_name: 'Ananya R.', vote_count: 19, assigned_worker: null },
-  { id: 'nf4', title: 'Street light not working', description: 'Entire block is dark at night', category: 'streetlight', severity: 'high', status: 'worker_assigned', latitude: 12.9698, longitude: 77.7500, address: 'Whitefield, Bengaluru', reporter_name: 'Rahul V.', vote_count: 15, assigned_worker: 'Venkatesh R.' },
-  { id: 'nf5', title: 'Illegal dumping near lake', description: 'Construction debris near Bellandur', category: 'garbage', severity: 'high', status: 'in_progress', latitude: 12.9250, longitude: 77.6700, address: 'Bellandur, Bengaluru', reporter_name: 'Divya G.', vote_count: 35, assigned_worker: 'Gopal Singh' },
+  { id: 'nf1', title: 'Large pothole on Wardha Road', description: 'Deep pothole near Ajni Square bus stop', category: 'pothole', severity: 'high', status: 'forwarded_nmc', latitude: 21.1250, longitude: 79.0750, address: 'Wardha Road, Nagpur', reporter_name: 'Aarav S.', vote_count: 12, assigned_worker: null },
+  { id: 'nf2', title: 'Water pipe burst on Sitabuldi Road', description: 'Water flowing on road for 2 hours', category: 'water_leakage', severity: 'critical', status: 'forwarded_nmc', latitude: 21.1458, longitude: 79.0820, address: 'Sitabuldi, Nagpur', reporter_name: 'Sneha I.', vote_count: 22, assigned_worker: null },
+  { id: 'nf3', title: 'Open manhole near Hislop College', description: 'Uncovered manhole near school zone', category: 'sewage', severity: 'critical', status: 'forwarded_nmc', latitude: 21.1400, longitude: 79.0850, address: 'Civil Lines, Nagpur', reporter_name: 'Ananya R.', vote_count: 19, assigned_worker: null },
+  { id: 'nf4', title: 'Street light not working in Dharampeth', description: 'Entire block is dark at night', category: 'streetlight', severity: 'high', status: 'worker_assigned', latitude: 21.1500, longitude: 79.0700, address: 'Dharampeth, Nagpur', reporter_name: 'Rahul V.', vote_count: 15, assigned_worker: 'Venkatesh R.' },
+  { id: 'nf5', title: 'Illegal dumping near Futala Lake', description: 'Construction debris near Futala Lake', category: 'garbage', severity: 'high', status: 'in_progress', latitude: 21.1580, longitude: 79.0480, address: 'Futala, Nagpur', reporter_name: 'Divya G.', vote_count: 35, assigned_worker: 'Gopal Singh' },
 ];
 
 export default function NMCDashboard() {
@@ -235,7 +235,7 @@ export default function NMCDashboard() {
       <MapView
         style={StyleSheet.absoluteFillObject}
         initialRegion={{
-          latitude: 12.9550, longitude: 77.6200,
+          latitude: 21.1458, longitude: 79.0882,
           latitudeDelta: 0.12, longitudeDelta: 0.12,
         }}
       >

@@ -14,14 +14,14 @@ const { width } = Dimensions.get('window');
 
 // Dummy data for demo
 const DUMMY_ISSUES = [
-  { id: 'd1', title: 'Large pothole on MG Road', description: 'Deep pothole near bus stop causing traffic issues', category: 'pothole', severity: 'high', status: 'reported', latitude: 12.9716, longitude: 77.5946, address: 'MG Road, Bengaluru', reporter_name: 'Aarav S.', created_at: '2026-03-09T06:30:00Z', vote_count: 12 },
-  { id: 'd2', title: 'Garbage dump near park entrance', description: 'Overflowing garbage bin for 3 days', category: 'garbage', severity: 'medium', status: 'in_review', latitude: 12.9352, longitude: 77.6245, address: 'Koramangala, Bengaluru', reporter_name: 'Priya P.', created_at: '2026-03-08T14:20:00Z', vote_count: 8 },
-  { id: 'd3', title: 'Street light not working', description: 'Entire block is dark at night, safety concern', category: 'streetlight', severity: 'high', status: 'reported', latitude: 12.9698, longitude: 77.7500, address: 'Whitefield, Bengaluru', reporter_name: 'Rahul V.', created_at: '2026-03-08T09:15:00Z', vote_count: 15 },
-  { id: 'd4', title: 'Water pipe burst on main road', description: 'Water flowing on road for 2 hours', category: 'water_leakage', severity: 'critical', status: 'in_review', latitude: 12.9850, longitude: 77.5533, address: 'Malleshwaram, Bengaluru', reporter_name: 'Sneha I.', created_at: '2026-03-07T18:45:00Z', vote_count: 22 },
-  { id: 'd5', title: 'Broken footpath tiles', description: 'Multiple broken tiles causing tripping hazard', category: 'road_damage', severity: 'medium', status: 'resolved', latitude: 12.9550, longitude: 77.5900, address: 'Jayanagar, Bengaluru', reporter_name: 'Vikram S.', created_at: '2026-03-07T11:00:00Z', vote_count: 6 },
-  { id: 'd6', title: 'Open manhole on side road', description: 'Uncovered manhole near school zone', category: 'sewage', severity: 'critical', status: 'reported', latitude: 12.9400, longitude: 77.6150, address: 'HSR Layout, Bengaluru', reporter_name: 'Ananya R.', created_at: '2026-03-06T16:30:00Z', vote_count: 19 },
-  { id: 'd7', title: 'Fallen tree blocking road', description: 'Tree fell after storm, one lane blocked', category: 'public_safety', severity: 'high', status: 'resolved', latitude: 12.9780, longitude: 77.6400, address: 'Indiranagar, Bengaluru', reporter_name: 'Karthik N.', created_at: '2026-03-06T08:00:00Z', vote_count: 28 },
-  { id: 'd8', title: 'Illegal dumping near lake', description: 'Construction debris dumped near Bellandur lake', category: 'garbage', severity: 'high', status: 'reported', latitude: 12.9250, longitude: 77.6700, address: 'Bellandur, Bengaluru', reporter_name: 'Divya G.', created_at: '2026-03-05T13:20:00Z', vote_count: 35 },
+  { id: 'd1', title: 'Large pothole on Wardha Road', description: 'Deep pothole near Ajni Square bus stop causing traffic', category: 'pothole', severity: 'high', status: 'reported', latitude: 21.1250, longitude: 79.0750, address: 'Wardha Road, Nagpur', reporter_name: 'Aarav S.', created_at: '2026-03-09T06:30:00Z', vote_count: 12 },
+  { id: 'd2', title: 'Garbage dump near Ambazari Garden', description: 'Overflowing garbage bin for 3 days', category: 'garbage', severity: 'medium', status: 'in_review', latitude: 21.1350, longitude: 79.0550, address: 'Ambazari, Nagpur', reporter_name: 'Priya P.', created_at: '2026-03-08T14:20:00Z', vote_count: 8 },
+  { id: 'd3', title: 'Street light not working in Dharampeth', description: 'Entire block is dark at night, safety concern', category: 'streetlight', severity: 'high', status: 'reported', latitude: 21.1500, longitude: 79.0700, address: 'Dharampeth, Nagpur', reporter_name: 'Rahul V.', created_at: '2026-03-08T09:15:00Z', vote_count: 15 },
+  { id: 'd4', title: 'Water pipe burst on Sitabuldi Main Road', description: 'Water flowing on road for 2 hours', category: 'water_leakage', severity: 'critical', status: 'in_review', latitude: 21.1458, longitude: 79.0820, address: 'Sitabuldi, Nagpur', reporter_name: 'Sneha I.', created_at: '2026-03-07T18:45:00Z', vote_count: 22 },
+  { id: 'd5', title: 'Broken footpath tiles at Sadar', description: 'Multiple broken tiles causing tripping hazard', category: 'road_damage', severity: 'medium', status: 'resolved', latitude: 21.1550, longitude: 79.0900, address: 'Sadar, Nagpur', reporter_name: 'Vikram S.', created_at: '2026-03-07T11:00:00Z', vote_count: 6 },
+  { id: 'd6', title: 'Open manhole near Hislop College', description: 'Uncovered manhole near school zone', category: 'sewage', severity: 'critical', status: 'reported', latitude: 21.1400, longitude: 79.0850, address: 'Civil Lines, Nagpur', reporter_name: 'Ananya R.', created_at: '2026-03-06T16:30:00Z', vote_count: 19 },
+  { id: 'd7', title: 'Fallen tree blocking Hingna Road', description: 'Tree fell after storm, one lane blocked', category: 'public_safety', severity: 'high', status: 'resolved', latitude: 21.1200, longitude: 79.0400, address: 'Hingna Road, Nagpur', reporter_name: 'Karthik N.', created_at: '2026-03-06T08:00:00Z', vote_count: 28 },
+  { id: 'd8', title: 'Illegal dumping near Futala Lake', description: 'Construction debris dumped near Futala Lake', category: 'garbage', severity: 'high', status: 'reported', latitude: 21.1580, longitude: 79.0480, address: 'Futala, Nagpur', reporter_name: 'Divya G.', created_at: '2026-03-05T13:20:00Z', vote_count: 35 },
 ];
 
 const WEEKLY_DATA = [
@@ -246,8 +246,8 @@ export default function AdminDashboard({ navigation }) {
       <MapView
         style={StyleSheet.absoluteFillObject}
         initialRegion={{
-          latitude: 12.9550,
-          longitude: 77.6200,
+          latitude: 21.1458,
+          longitude: 79.0882,
           latitudeDelta: 0.12,
           longitudeDelta: 0.12,
         }}
