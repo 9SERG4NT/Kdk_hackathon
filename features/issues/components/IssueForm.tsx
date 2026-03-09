@@ -45,7 +45,7 @@ export function IssueForm() {
   });
 
   async function onSubmit(values: CreateIssueInput) {
-    if (!geo.latitude || !geo.longitude) {
+    if (geo.latitude == null || geo.longitude == null) {
       geo.requestLocation();
       return;
     }
@@ -139,9 +139,9 @@ export function IssueForm() {
               ) : (
                 <MapPin className="mr-2 h-4 w-4" />
               )}
-              {geo.latitude ? "Location captured" : "Get my location"}
+              {geo.latitude != null ? "Location captured" : "Get my location"}
             </Button>
-            {geo.latitude && geo.longitude && (
+            {geo.latitude != null && geo.longitude != null && (
               <p className="text-xs text-muted-foreground">
                 {geo.latitude.toFixed(6)}, {geo.longitude.toFixed(6)}
               </p>
@@ -154,7 +154,7 @@ export function IssueForm() {
           <Button
             type="submit"
             className="w-full"
-            disabled={submitting || !geo.latitude}
+            disabled={submitting || geo.latitude == null}
           >
             {submitting ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
