@@ -1,7 +1,17 @@
+/** DB-facing status values matching the Postgres `issue_status` enum. */
 export type IssueStatus =
-  | "Reported"
-  | "Submitted to NMC"
-  | "Resolved";
+  | "reported"
+  | "in_review"
+  | "resolved"
+  | "rejected";
+
+/** Human-readable labels for each DB status value. */
+export const ISSUE_STATUS_LABELS: Record<IssueStatus, string> = {
+  reported: "Reported",
+  in_review: "In Review",
+  resolved: "Resolved",
+  rejected: "Rejected",
+};
 
 export type IssueCategory =
   | "Pothole"

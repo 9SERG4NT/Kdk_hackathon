@@ -28,12 +28,12 @@ import { format } from "date-fns";
 import Image from "next/image";
 import type { RoadIssue, IssueStatus } from "@/types";
 
-type NmcFilter = "all" | "Submitted to NMC" | "Resolved";
+type NmcFilter = "all" | "in_review" | "resolved";
 
 const NMC_FILTERS: { value: NmcFilter; label: string }[] = [
   { value: "all", label: "All" },
-  { value: "Submitted to NMC", label: "Submitted to NMC" },
-  { value: "Resolved", label: "Resolved" },
+  { value: "in_review", label: "In Review" },
+  { value: "resolved", label: "Resolved" },
 ];
 
 export default function NmcDashboard() {
@@ -46,15 +46,15 @@ export default function NmcDashboard() {
 
   // NMC sees issues that have been submitted to them or resolved
   const nmcStatuses: IssueStatus[] = [
-    "Submitted to NMC",
-    "Resolved",
+    "in_review",
+    "resolved",
   ];
   const nmcIssues = allIssues.filter((i) => nmcStatuses.includes(i.status));
   const filtered = filter === "all" ? nmcIssues : nmcIssues.filter((i) => i.status === filter);
 
   const counts = {
-    submittedToNmc: nmcIssues.filter((i) => i.status === "Submitted to NMC").length,
-    resolved: nmcIssues.filter((i) => i.status === "Resolved").length,
+    inReview: nmcIssues.filter((i) => i.status === "in_review").length,
+    resolved: nmcIssues.filter((i) => i.status === "resolved").length,
   };
 
   function handleAssignWorker(issue: RoadIssue) {
@@ -62,7 +62,7 @@ export default function NmcDashboard() {
     if (!workerName) return;
     updateStatus.mutate({
       id: issue.id,
-      status: "Submitted to NMC",
+      status: "in_review",
       performedBy: user?.username ?? "nmc",
       assignedWorker: workerName,
     });
@@ -72,7 +72,7 @@ export default function NmcDashboard() {
   function handleResolve(issue: RoadIssue) {
     updateStatus.mutate({
       id: issue.id,
-      status: "Resolved",
+      status: "resolved",
       performedBy: user?.username ?? "nmc",
     });
   }
@@ -130,8 +130,8 @@ export default function NmcDashboard() {
       <div className="grid grid-cols-2 gap-4">
         <Card className="border-blue-100 bg-blue-50/60">
           <CardContent className="p-4">
-            <p className="text-sm text-blue-700">Submitted to NMC</p>
-            <p className="text-2xl font-bold text-blue-800">{counts.submittedToNmc}</p>
+            <p className="text-sm text-blue-700">In Review</p>
+            <p className="text-2xl font-bold text-blue-800">{counts.inReview}</p>
           </CardContent>
         </Card>
         <Card className="border-green-100 bg-green-50/60">
@@ -267,7 +267,7 @@ function NmcActions({
   onAssign: () => void;
   onResolve: () => void;
 }) {
-  if (issue.status === "Submitted to NMC") {
+  if (issue.status === "in_review") {
     if (issue.assigned_worker) {
       return (
         <div className="flex items-center gap-2">

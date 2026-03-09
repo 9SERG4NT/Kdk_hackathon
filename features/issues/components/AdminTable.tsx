@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import { Loader2, ImageOff, Send, Eye, ChevronDown, X } from "lucide-react";
 import Image from "next/image";
 import type { RoadIssue, IssueStatus } from "@/types";
+import { ISSUE_STATUS_LABELS } from "@/types";
 import { StatusBadge } from "./StatusBadge";
 import { useUpdateIssueStatus } from "../hooks/useUpdateIssueStatus";
 import { useAuth } from "@/lib/auth";
@@ -22,16 +23,18 @@ import { ActivityTimeline } from "./ActivityTimeline";
 type FilterValue = "all" | IssueStatus;
 
 const ALL_STATUSES: IssueStatus[] = [
-  "Reported",
-  "Submitted to NMC",
-  "Resolved",
+  "reported",
+  "in_review",
+  "resolved",
+  "rejected",
 ];
 
 const FILTER_OPTIONS: { value: FilterValue; label: string }[] = [
   { value: "all", label: "All" },
-  { value: "Reported", label: "Reported" },
-  { value: "Submitted to NMC", label: "Submitted to NMC" },
-  { value: "Resolved", label: "Resolved" },
+  { value: "reported", label: "Reported" },
+  { value: "in_review", label: "In Review" },
+  { value: "resolved", label: "Resolved" },
+  { value: "rejected", label: "Rejected" },
 ];
 
 interface AdminTableProps {
@@ -55,7 +58,7 @@ export function AdminTable({ issues, isLoading }: AdminTableProps) {
   function handleSubmitToNmc(issue: RoadIssue) {
     updateStatus.mutate({
       id: issue.id,
-      status: "Submitted to NMC",
+      status: "in_review",
       performedBy: user?.username ?? "admin",
     });
   }
@@ -197,7 +200,7 @@ export function AdminTable({ issues, isLoading }: AdminTableProps) {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-1.5">
-                      {issue.status === "Reported" && (
+                      {issue.status === "reported" && (
                         <Button
                           size="sm"
                           variant="outline"
@@ -235,7 +238,7 @@ export function AdminTable({ issues, isLoading }: AdminTableProps) {
                                 }`}
                                 onClick={() => handleChangeStatus(issue, s)}
                               >
-                                {s}
+                                {ISSUE_STATUS_LABELS[s]}
                               </button>
                             ))}
                           </div>
