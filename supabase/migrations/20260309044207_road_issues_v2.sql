@@ -16,6 +16,7 @@ drop type if exists public.issue_severity;
 -- Create the simplified road_issues table per spec
 create table if not exists public.road_issues (
   id uuid primary key default gen_random_uuid(),
+  reporter_id uuid references auth.users(id) on delete set null,
   title text not null,
   description text not null,
   category text not null default 'Other',
@@ -33,6 +34,20 @@ create index if not exists idx_road_issues_status on public.road_issues (status)
 -- Enable RLS
 alter table public.road_issues enable row level security;
 
+-- Admin helper: checks app_metadata set via the Supabase service-role API or Dashboard
+create or replace function public.is_admin()
+returns boolean
+language sql
+stable
+security invoker
+set search_path = public
+as $$
+  select coalesce(
+    (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin',
+    false
+  );
+$$;
+
 -- Public read policy
 drop policy if exists "Anyone can read issues" on public.road_issues;
 create policy "Anyone can read issues"
@@ -40,20 +55,22 @@ on public.road_issues for select
 to anon, authenticated
 using (true);
 
--- Public insert policy
+-- Authenticated insert policy: reporters must be signed in and own the row
 drop policy if exists "Anyone can create issues" on public.road_issues;
-create policy "Anyone can create issues"
+drop policy if exists "Authenticated users can create issues" on public.road_issues;
+create policy "Authenticated users can create issues"
 on public.road_issues for insert
-to anon, authenticated
-with check (true);
+to authenticated
+with check (auth.uid() = reporter_id);
 
--- Admin update policy (allows status updates)
+-- Admin-only update policy
 drop policy if exists "Anyone can update issues" on public.road_issues;
-create policy "Anyone can update issues"
+drop policy if exists "Admins can update issues" on public.road_issues;
+create policy "Admins can update issues"
 on public.road_issues for update
-to anon, authenticated
-using (true)
-with check (true);
+to authenticated
+using (public.is_admin())
+with check (public.is_admin());
 
 -- Storage bucket for issue images
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
@@ -77,9 +94,9 @@ on storage.objects for select
 to anon, authenticated
 using (bucket_id = 'road-issue-images');
 
--- Public upload for storage objects
+-- Authenticated-only upload for storage objects
 drop policy if exists "Public upload for road images" on storage.objects;
-create policy "Public upload for road images"
+create policy "Authenticated upload for road images"
 on storage.objects for insert
-to anon, authenticated
+to authenticated
 with check (bucket_id = 'road-issue-images');
