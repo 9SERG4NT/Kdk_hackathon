@@ -4,7 +4,8 @@ import { useState } from "react";
 import { format } from "date-fns";
 import { Loader2, ImageOff, Send, Eye, ChevronDown, X } from "lucide-react";
 import Image from "next/image";
-import type { RoadIssue, IssueStatus } from "@/types";
+import type { RoadIssue, DbIssueStatus } from "@/types";
+import { DB_STATUS_LABELS } from "@/types";
 import { StatusBadge } from "./StatusBadge";
 import { useUpdateIssueStatus } from "../hooks/useUpdateIssueStatus";
 import { useAuth } from "@/lib/auth";
@@ -19,19 +20,21 @@ import {
 } from "@/components/ui/table";
 import { ActivityTimeline } from "./ActivityTimeline";
 
-type FilterValue = "all" | IssueStatus;
+type FilterValue = "all" | DbIssueStatus;
 
-const ALL_STATUSES: IssueStatus[] = [
-  "Reported",
-  "Submitted to NMC",
-  "Resolved",
+const ALL_STATUSES: DbIssueStatus[] = [
+  "reported",
+  "in_review",
+  "resolved",
+  "rejected",
 ];
 
 const FILTER_OPTIONS: { value: FilterValue; label: string }[] = [
   { value: "all", label: "All" },
-  { value: "Reported", label: "Reported" },
-  { value: "Submitted to NMC", label: "Submitted to NMC" },
-  { value: "Resolved", label: "Resolved" },
+  { value: "reported", label: DB_STATUS_LABELS.reported },
+  { value: "in_review", label: DB_STATUS_LABELS.in_review },
+  { value: "resolved", label: DB_STATUS_LABELS.resolved },
+  { value: "rejected", label: DB_STATUS_LABELS.rejected },
 ];
 
 interface AdminTableProps {
@@ -55,12 +58,12 @@ export function AdminTable({ issues, isLoading }: AdminTableProps) {
   function handleSubmitToNmc(issue: RoadIssue) {
     updateStatus.mutate({
       id: issue.id,
-      status: "Submitted to NMC",
+      status: "in_review",
       performedBy: user?.username ?? "admin",
     });
   }
 
-  function handleChangeStatus(issue: RoadIssue, newStatus: IssueStatus) {
+  function handleChangeStatus(issue: RoadIssue, newStatus: DbIssueStatus) {
     setStatusDropdownId(null);
     if (newStatus === issue.status) return;
     updateStatus.mutate({
@@ -197,7 +200,7 @@ export function AdminTable({ issues, isLoading }: AdminTableProps) {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-1.5">
-                      {issue.status === "Reported" && (
+                      {issue.status === "reported" && (
                         <Button
                           size="sm"
                           variant="outline"
@@ -235,7 +238,7 @@ export function AdminTable({ issues, isLoading }: AdminTableProps) {
                                 }`}
                                 onClick={() => handleChangeStatus(issue, s)}
                               >
-                                {s}
+                                {DB_STATUS_LABELS[s]}
                               </button>
                             ))}
                           </div>
