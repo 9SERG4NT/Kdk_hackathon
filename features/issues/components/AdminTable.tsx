@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { format } from "date-fns";
-import { Loader2 } from "lucide-react";
+import { Loader2, ImageOff } from "lucide-react";
 import Image from "next/image";
 import type { RoadIssue, IssueStatus } from "@/types";
 import { StatusBadge } from "./StatusBadge";
@@ -98,8 +98,8 @@ export function AdminTable({ issues, isLoading }: AdminTableProps) {
                       />
                     </div>
                   ) : (
-                    <div className="h-12 w-12 rounded bg-muted flex items-center justify-center text-xs text-muted-foreground">
-                      N/A
+                    <div className="h-12 w-12 rounded bg-muted flex items-center justify-center text-muted-foreground">
+                      <ImageOff className="h-5 w-5" />
                     </div>
                   )}
                 </TableCell>

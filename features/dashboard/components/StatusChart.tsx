@@ -15,8 +15,8 @@ import type { RoadIssue, IssueStatus } from "@/types";
 
 const STATUS_COLORS: Record<IssueStatus, string> = {
   Reported: "#eab308",
-  "In Progress": "#3b82f6",
-  Resolved: "#22c55e",
+  "In Progress": "#22c55e",
+  Resolved: "#16a34a",
 };
 
 interface StatusChartProps {

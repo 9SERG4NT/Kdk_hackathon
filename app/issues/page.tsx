@@ -32,9 +32,9 @@ export default function IssuesPage() {
           <p className="text-sm text-yellow-700">Reported</p>
           <p className="text-2xl font-bold text-yellow-800">{reported}</p>
         </div>
-        <div className="rounded-lg border bg-blue-50 p-4">
-          <p className="text-sm text-blue-700">In Progress</p>
-          <p className="text-2xl font-bold text-blue-800">{inProgress}</p>
+        <div className="rounded-lg border bg-emerald-50 p-4">
+          <p className="text-sm text-emerald-700">In Progress</p>
+          <p className="text-2xl font-bold text-emerald-800">{inProgress}</p>
         </div>
         <div className="rounded-lg border bg-green-50 p-4">
           <p className="text-sm text-green-700">Resolved</p>

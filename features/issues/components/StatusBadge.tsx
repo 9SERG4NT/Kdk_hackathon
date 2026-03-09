@@ -13,7 +13,7 @@ const statusConfig: Record<
   },
   "In Progress": {
     label: "In Progress",
-    className: "bg-blue-100 text-blue-800 border-blue-300",
+    className: "bg-emerald-100 text-emerald-800 border-emerald-300",
   },
   Resolved: {
     label: "Resolved",
@@ -25,8 +25,10 @@ interface StatusBadgeProps {
   status: IssueStatus;
 }
 
+const fallbackConfig = { label: "Unknown", className: "bg-gray-100 text-gray-800 border-gray-300" };
+
 export function StatusBadge({ status }: StatusBadgeProps) {
-  const config = statusConfig[status];
+  const config = statusConfig[status] ?? fallbackConfig;
   return (
     <Badge variant="outline" className={config.className}>
       {config.label}

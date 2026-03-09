@@ -2,6 +2,7 @@
 
 import { format } from "date-fns";
 import Image from "next/image";
+import { ImageOff } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -64,8 +65,8 @@ export function RecentIssues({ issues }: RecentIssuesProps) {
                         />
                       </div>
                     ) : (
-                      <div className="h-10 w-10 rounded bg-muted flex items-center justify-center text-[10px] text-muted-foreground">
-                        N/A
+                      <div className="h-10 w-10 rounded bg-muted flex items-center justify-center text-muted-foreground">
+                        <ImageOff className="h-4 w-4" />
                       </div>
                     )}
                   </TableCell>

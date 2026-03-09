@@ -47,8 +47,8 @@ export function StatsCards({ issues }: StatsCardsProps) {
       label: "In Progress",
       value: inProgress,
       icon: <Clock className="h-5 w-5" />,
-      color: "text-blue-700",
-      bgColor: "bg-blue-50",
+      color: "text-emerald-700",
+      bgColor: "bg-emerald-50",
     },
     {
       label: "Resolved",

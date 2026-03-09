@@ -58,7 +58,7 @@ export function HeroSlideshow() {
             const Icon = slide.icon;
             return (
               <article key={slide.title} className="min-w-full p-6 md:p-9">
-                <p className="text-xs uppercase tracking-[0.2em] text-sky-700/80">
+                <p className="text-xs uppercase tracking-[0.2em] text-emerald-700/80">
                   {slide.eyebrow}
                 </p>
                 <div className="mt-4 grid gap-5 md:grid-cols-[1fr_auto] md:items-end">
@@ -95,8 +95,8 @@ export function HeroSlideshow() {
               onClick={() => setActiveIndex(index)}
               className={`h-2.5 rounded-full transition-all duration-300 ${
                 index === activeIndex
-                  ? "w-8 bg-slate-900"
-                  : "w-2.5 bg-slate-400/70 hover:bg-slate-600"
+                  ? "w-8 bg-emerald-600"
+                  : "w-2.5 bg-slate-400/70 hover:bg-emerald-400"
               }`}
               aria-label={`Show slide ${index + 1}`}
             />

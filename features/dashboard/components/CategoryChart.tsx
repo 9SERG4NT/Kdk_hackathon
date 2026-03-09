@@ -12,7 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { RoadIssue } from "@/types";
 import { ISSUE_CATEGORIES } from "@/features/issues/types";
 
-const COLORS = ["#ef4444", "#3b82f6", "#f59e0b", "#6366f1", "#8b5cf6"];
+const COLORS = ["#22c55e", "#16a34a", "#f59e0b", "#6366f1", "#ef4444"];
 
 interface CategoryChartProps {
   issues: RoadIssue[];
