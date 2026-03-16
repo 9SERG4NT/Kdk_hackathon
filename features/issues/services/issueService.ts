@@ -1,5 +1,5 @@
 import { supabase } from "@/lib/supabase";
-import type { RoadIssue, IssueStatus, ActivityLog } from "@/types";
+import type { RoadIssue, DbIssueStatus, ActivityLog } from "@/types";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const STORAGE_BUCKET = "road-issue-images";
@@ -40,7 +40,7 @@ export async function createIssue(
 
 export async function updateIssueStatus(
   id: string,
-  status: IssueStatus,
+  status: DbIssueStatus,
   performedBy?: string,
   assignedWorker?: string
 ): Promise<RoadIssue> {
