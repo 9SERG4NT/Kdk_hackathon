@@ -1,15 +1,23 @@
 import { supabase } from "@/lib/supabase";
 import type { RoadIssue, IssueStatus, ActivityLog } from "@/types";
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const STORAGE_BUCKET = "road-issue-images";
+const SIGNED_URL_EXPIRY_SECONDS = 3600; // 1 hour
 
-function resolveImageUrl(row: Record<string, unknown>): string | null {
-  if (row.image_url) return row.image_url as string;
-  if (row.image_path) {
-    return `${SUPABASE_URL}/storage/v1/object/public/${STORAGE_BUCKET}/${row.image_path}`;
-  }
-  return null;
+async function resolveImageUrl(row: Record<string, unknown>): Promise<string | null> {
+  // image_url may hold either a full URL (legacy) or a storage object path
+  const raw = (row.image_url ?? row.image_path) as string | undefined;
+  if (!raw) return null;
+
+  // If already a full URL, return as-is
+  if (raw.startsWith("https://")) return raw;
+
+  // raw is a storage object path – generate a short-lived signed URL
+  const { data, error } = await supabase.storage
+    .from(STORAGE_BUCKET)
+    .createSignedUrl(raw, SIGNED_URL_EXPIRY_SECONDS);
+  if (error || !data) return null;
+  return data.signedUrl;
 }
 
 export async function fetchIssues(): Promise<RoadIssue[]> {
@@ -19,10 +27,13 @@ export async function fetchIssues(): Promise<RoadIssue[]> {
     .order("created_at", { ascending: false });
 
   if (error) throw error;
-  return (data as Record<string, unknown>[]).map((row) => ({
-    ...row,
-    image_url: resolveImageUrl(row),
-  })) as RoadIssue[];
+  const rows = data as Record<string, unknown>[];
+  return Promise.all(
+    rows.map(async (row) => ({
+      ...row,
+      image_url: await resolveImageUrl(row),
+    }))
+  ) as Promise<RoadIssue[]>;
 }
 
 export async function createIssue(
