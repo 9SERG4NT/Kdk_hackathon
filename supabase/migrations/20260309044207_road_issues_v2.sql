@@ -22,7 +22,7 @@ create table if not exists public.road_issues (
   image_url text,
   latitude float8 not null,
   longitude float8 not null,
-  status text not null default 'Reported',
+  status text not null default 'reported',
   created_at timestamptz not null default now()
 );
 
