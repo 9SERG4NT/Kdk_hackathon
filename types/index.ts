@@ -1,7 +1,15 @@
 export type IssueStatus =
-  | "Reported"
-  | "Submitted to NMC"
-  | "Resolved";
+  | "reported"
+  | "in_review"
+  | "resolved"
+  | "rejected";
+
+export const ISSUE_STATUS_LABELS: Record<IssueStatus, string> = {
+  reported: "Reported",
+  in_review: "Submitted to NMC",
+  resolved: "Resolved",
+  rejected: "Rejected",
+};
 
 export type IssueCategory =
   | "Pothole"
@@ -16,6 +24,7 @@ export interface RoadIssue {
   description: string;
   category: IssueCategory;
   image_url: string | null;
+  image_path?: string | null;
   latitude: number;
   longitude: number;
   status: IssueStatus;

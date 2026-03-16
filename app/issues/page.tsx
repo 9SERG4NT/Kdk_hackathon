@@ -8,9 +8,9 @@ import { Button } from "@/components/ui/button";
 export default function IssuesPage() {
   const { data: issues = [], isLoading, refetch } = useIssues();
 
-  const reported = issues.filter((i) => i.status === "Reported").length;
-  const submittedToNmc = issues.filter((i) => i.status === "Submitted to NMC").length;
-  const resolved = issues.filter((i) => i.status === "Resolved").length;
+  const reported = issues.filter((i) => i.status === "reported").length;
+  const submittedToNmc = issues.filter((i) => i.status === "in_review").length;
+  const resolved = issues.filter((i) => i.status === "resolved").length;
 
   return (
     <div className="max-w-[1400px] mx-auto px-4 py-6 space-y-6">
