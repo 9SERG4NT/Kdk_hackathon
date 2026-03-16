@@ -12,9 +12,10 @@ import { LogIn } from "lucide-react";
 export default function LoginPage() {
   const { login, user } = useAuth();
   const router = useRouter();
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isPending, setIsPending] = useState(false);
 
   // Already logged in
   if (user) {
@@ -22,15 +23,16 @@ export default function LoginPage() {
     return null;
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
-    const result = login(username, password);
+    setIsPending(true);
+    const result = await login(email, password);
+    setIsPending(false);
     if (result.success) {
-      const role = username.toLowerCase() === "nmc" ? "nmc" : "admin";
-      router.push(role === "admin" ? "/dashboard" : "/nmc");
+      router.push(result.role === "nmc" ? "/nmc" : "/dashboard");
     } else {
-      setError(result.error ?? "Login failed");
+      setError(result.error);
     }
   }
 
@@ -49,13 +51,14 @@ export default function LoginPage() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="username">Username</Label>
+              <Label htmlFor="email">Email</Label>
               <Input
-                id="username"
-                placeholder="admin or nmc"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                autoComplete="username"
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="email"
                 required
               />
             </div>
@@ -76,9 +79,13 @@ export default function LoginPage() {
                 {error}
               </p>
             )}
-            <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white">
+            <Button
+              type="submit"
+              disabled={isPending}
+              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
+            >
               <LogIn className="h-4 w-4 mr-2" />
-              Sign In
+              {isPending ? "Signing in…" : "Sign In"}
             </Button>
           </form>
         </CardContent>

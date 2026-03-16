@@ -56,7 +56,7 @@ export function AdminTable({ issues, isLoading }: AdminTableProps) {
     updateStatus.mutate({
       id: issue.id,
       status: "Submitted to NMC",
-      performedBy: user?.username ?? "admin",
+      performedBy: user?.email ?? "admin",
     });
   }
 
@@ -66,7 +66,7 @@ export function AdminTable({ issues, isLoading }: AdminTableProps) {
     updateStatus.mutate({
       id: issue.id,
       status: newStatus,
-      performedBy: user?.username ?? "admin",
+      performedBy: user?.email ?? "admin",
     });
   }
 
