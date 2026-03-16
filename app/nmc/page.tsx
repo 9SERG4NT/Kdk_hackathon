@@ -63,7 +63,7 @@ export default function NmcDashboard() {
     updateStatus.mutate({
       id: issue.id,
       status: "Submitted to NMC",
-      performedBy: user?.username ?? "nmc",
+      performedBy: user?.email ?? "nmc",
       assignedWorker: workerName,
     });
     setWorkerInputs((prev) => ({ ...prev, [issue.id]: "" }));
@@ -73,7 +73,7 @@ export default function NmcDashboard() {
     updateStatus.mutate({
       id: issue.id,
       status: "Resolved",
-      performedBy: user?.username ?? "nmc",
+      performedBy: user?.email ?? "nmc",
     });
   }
 
