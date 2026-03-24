@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateIssueStatus } from "../services/issueService";
-import type { RoadIssue, IssueStatus } from "@/types";
+import type { RoadIssue, DbIssueStatus } from "@/types";
 
 interface UpdateParams {
   id: string;
-  status: IssueStatus;
+  status: DbIssueStatus;
   performedBy?: string;
   assignedWorker?: string;
 }
