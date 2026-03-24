@@ -24,9 +24,10 @@ interface StatItem {
 
 export function StatsCards({ issues }: StatsCardsProps) {
   const total = issues.length;
-  const reported = issues.filter((i) => i.status === "Reported").length;
-  const submittedToNmc = issues.filter((i) => i.status === "Submitted to NMC").length;
-  const resolved = issues.filter((i) => i.status === "Resolved").length;
+  const reported = issues.filter((i) => i.status === "reported").length;
+  const inReview = issues.filter((i) => i.status === "in_review").length;
+  const resolved = issues.filter((i) => i.status === "resolved").length;
+  const rejected = issues.filter((i) => i.status === "rejected").length;
 
   const stats: StatItem[] = [
     {
@@ -44,8 +45,8 @@ export function StatsCards({ issues }: StatsCardsProps) {
       bgColor: "bg-yellow-50",
     },
     {
-      label: "Submitted to NMC",
-      value: submittedToNmc,
+      label: "In Review",
+      value: inReview,
       icon: <Clock className="h-5 w-5" />,
       color: "text-blue-700",
       bgColor: "bg-blue-50",
@@ -57,10 +58,17 @@ export function StatsCards({ issues }: StatsCardsProps) {
       color: "text-green-700",
       bgColor: "bg-green-50",
     },
+    {
+      label: "Rejected",
+      value: rejected,
+      icon: <AlertTriangle className="h-5 w-5" />,
+      color: "text-red-700",
+      bgColor: "bg-red-50",
+    },
   ];
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
       {stats.map((stat, index) => (
         <Card
           key={stat.label}
