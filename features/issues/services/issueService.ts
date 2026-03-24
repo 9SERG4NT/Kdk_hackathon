@@ -26,11 +26,14 @@ export async function fetchIssues(): Promise<RoadIssue[]> {
 }
 
 export async function createIssue(
-  issue: Omit<RoadIssue, "id" | "status" | "created_at" | "assigned_worker">
+  issue: Omit<RoadIssue, "id" | "status" | "created_at" | "assigned_worker" | "reporter_id">
 ): Promise<RoadIssue> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("You must be signed in to report an issue.");
+
   const { data, error } = await supabase
     .from("road_issues")
-    .insert(issue)
+    .insert({ ...issue, reporter_id: user.id })
     .select()
     .single();
 

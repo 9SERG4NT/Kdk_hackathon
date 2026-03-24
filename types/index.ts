@@ -12,6 +12,7 @@ export type IssueCategory =
 
 export interface RoadIssue {
   id: string;
+  reporter_id: string | null;
   title: string;
   description: string;
   category: IssueCategory;
