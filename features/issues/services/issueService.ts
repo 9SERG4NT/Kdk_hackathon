@@ -1,14 +1,8 @@
 import { supabase } from "@/lib/supabase";
-import type { RoadIssue, IssueStatus, ActivityLog } from "@/types";
-
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const STORAGE_BUCKET = "road-issue-images";
+import type { RoadIssue, IssueStatus, ActivityLog, CreateIssuePayload } from "@/types";
 
 function resolveImageUrl(row: Record<string, unknown>): string | null {
   if (row.image_url) return row.image_url as string;
-  if (row.image_path) {
-    return `${SUPABASE_URL}/storage/v1/object/public/${STORAGE_BUCKET}/${row.image_path}`;
-  }
   return null;
 }
 
@@ -26,11 +20,11 @@ export async function fetchIssues(): Promise<RoadIssue[]> {
 }
 
 export async function createIssue(
-  issue: Omit<RoadIssue, "id" | "status" | "created_at" | "assigned_worker">
+  payload: CreateIssuePayload
 ): Promise<RoadIssue> {
   const { data, error } = await supabase
     .from("road_issues")
-    .insert(issue)
+    .insert(payload)
     .select()
     .single();
 
