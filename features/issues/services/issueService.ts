@@ -1,12 +1,11 @@
 import { supabase } from "@/lib/supabase";
-import type { RoadIssue, IssueStatus, ActivityLog } from "@/types";
+import type { RoadIssue, DbIssueStatus, ActivityLog } from "@/types";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const STORAGE_BUCKET = "road-issue-images";
 
 function resolveImageUrl(row: Record<string, unknown>): string | null {
-  if (row.image_url) return row.image_url as string;
-  if (row.image_path) {
+  if (typeof row.image_path === "string" && row.image_path) {
     return `${SUPABASE_URL}/storage/v1/object/public/${STORAGE_BUCKET}/${row.image_path}`;
   }
   return null;
@@ -26,27 +25,31 @@ export async function fetchIssues(): Promise<RoadIssue[]> {
 }
 
 export async function createIssue(
-  issue: Omit<RoadIssue, "id" | "status" | "created_at" | "assigned_worker">
+  issue: Omit<RoadIssue, "id" | "reporter_id" | "status" | "created_at" | "updated_at" | "assigned_to" | "admin_notes" | "resolved_at" | "image_url">
 ): Promise<RoadIssue> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Not authenticated");
+
   const { data, error } = await supabase
     .from("road_issues")
-    .insert(issue)
+    .insert({ ...issue, reporter_id: user.id })
     .select()
     .single();
 
   if (error) throw error;
-  return data as RoadIssue;
+  const row = data as Record<string, unknown>;
+  return { ...row, image_url: resolveImageUrl(row) } as RoadIssue;
 }
 
 export async function updateIssueStatus(
   id: string,
-  status: IssueStatus,
+  status: DbIssueStatus,
   performedBy?: string,
-  assignedWorker?: string
+  assignedTo?: string
 ): Promise<RoadIssue> {
   const updatePayload: Record<string, unknown> = { status };
-  if (assignedWorker !== undefined) {
-    updatePayload.assigned_worker = assignedWorker;
+  if (assignedTo !== undefined) {
+    updatePayload.assigned_to = assignedTo;
   }
 
   const { data, error } = await supabase
@@ -60,10 +63,11 @@ export async function updateIssueStatus(
 
   // Log the activity
   if (performedBy) {
-    await addActivityLog(id, `Status changed to "${status}"`, performedBy, assignedWorker ? `Worker: ${assignedWorker}` : null);
+    await addActivityLog(id, `Status changed to "${status}"`, performedBy, assignedTo ? `Assigned to: ${assignedTo}` : null);
   }
 
-  return data as RoadIssue;
+  const row = data as Record<string, unknown>;
+  return { ...row, image_url: resolveImageUrl(row) } as RoadIssue;
 }
 
 export async function addActivityLog(

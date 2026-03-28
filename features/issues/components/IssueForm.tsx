@@ -18,11 +18,11 @@ import { ImageUpload } from "./ImageUpload";
 import { useCreateIssue } from "../hooks/useCreateIssue";
 import { useGeolocation } from "../hooks/useGeolocation";
 import { uploadIssueImage } from "../services/uploadService";
-import {
-  createIssueSchema,
-  ISSUE_CATEGORIES,
+import { createIssueSchema,
+  ISSUE_SEVERITIES,
   type CreateIssueInput,
 } from "../types";
+import { ISSUE_SEVERITY_LABELS } from "@/types";
 
 export function IssueForm() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -40,7 +40,7 @@ export function IssueForm() {
     defaultValues: {
       title: "",
       description: "",
-      category: "Pothole",
+      severity: "medium",
     },
   });
 
@@ -52,18 +52,19 @@ export function IssueForm() {
 
     setSubmitting(true);
     try {
-      let imageUrl: string | null = null;
+      let imagePath = "";
       if (selectedFile) {
-        imageUrl = await uploadIssueImage(selectedFile);
+        imagePath = await uploadIssueImage(selectedFile);
       }
 
       await createIssue.mutateAsync({
         title: values.title,
         description: values.description,
-        category: values.category,
-        image_url: imageUrl,
+        severity: values.severity,
+        image_path: imagePath,
         latitude: geo.latitude,
         longitude: geo.longitude,
+        address: null,
       });
 
       reset();
@@ -110,15 +111,15 @@ export function IssueForm() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="category">Category</Label>
+            <Label htmlFor="severity">Severity</Label>
             <select
-              id="category"
+              id="severity"
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-              {...register("category")}
+              {...register("severity")}
             >
-              {ISSUE_CATEGORIES.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
+              {ISSUE_SEVERITIES.map((s) => (
+                <option key={s} value={s}>
+                  {ISSUE_SEVERITY_LABELS[s]}
                 </option>
               ))}
             </select>

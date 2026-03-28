@@ -63,18 +63,17 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Build the full public URL from the storage path
-    const imageUrl = `${SUPABASE_URL}/storage/v1/object/public/road-issue-images/${payload.imagePath}`;
-
     const { data, error } = await supabase
       .from("road_issues")
       .insert({
+        reporter_id: userResult.user.id,
         title: payload.title,
         description: payload.description,
-        category: payload.severity ?? "Other",
+        severity: payload.severity ?? "medium",
         latitude: payload.latitude,
         longitude: payload.longitude,
-        image_url: imageUrl,
+        address: payload.address ?? null,
+        image_path: payload.imagePath,
       })
       .select("id, status, created_at")
       .single();

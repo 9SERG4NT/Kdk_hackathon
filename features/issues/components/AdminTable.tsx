@@ -4,7 +4,8 @@ import { useState } from "react";
 import { format } from "date-fns";
 import { Loader2, ImageOff, Send, Eye, ChevronDown, X } from "lucide-react";
 import Image from "next/image";
-import type { RoadIssue, IssueStatus } from "@/types";
+import type { RoadIssue, DbIssueStatus } from "@/types";
+import { ISSUE_STATUS_LABELS } from "@/types";
 import { StatusBadge } from "./StatusBadge";
 import { useUpdateIssueStatus } from "../hooks/useUpdateIssueStatus";
 import { useAuth } from "@/lib/auth";
@@ -19,19 +20,18 @@ import {
 } from "@/components/ui/table";
 import { ActivityTimeline } from "./ActivityTimeline";
 
-type FilterValue = "all" | IssueStatus;
+type FilterValue = "all" | DbIssueStatus;
 
-const ALL_STATUSES: IssueStatus[] = [
-  "Reported",
-  "Submitted to NMC",
-  "Resolved",
+const ALL_STATUSES: DbIssueStatus[] = [
+  "reported",
+  "in_review",
+  "resolved",
+  "rejected",
 ];
 
 const FILTER_OPTIONS: { value: FilterValue; label: string }[] = [
   { value: "all", label: "All" },
-  { value: "Reported", label: "Reported" },
-  { value: "Submitted to NMC", label: "Submitted to NMC" },
-  { value: "Resolved", label: "Resolved" },
+  ...ALL_STATUSES.map((s) => ({ value: s, label: ISSUE_STATUS_LABELS[s] })),
 ];
 
 interface AdminTableProps {
@@ -52,15 +52,15 @@ export function AdminTable({ issues, isLoading }: AdminTableProps) {
       ? issues
       : issues.filter((i) => i.status === filterStatus);
 
-  function handleSubmitToNmc(issue: RoadIssue) {
+  function handleSubmitForReview(issue: RoadIssue) {
     updateStatus.mutate({
       id: issue.id,
-      status: "Submitted to NMC",
+      status: "in_review",
       performedBy: user?.username ?? "admin",
     });
   }
 
-  function handleChangeStatus(issue: RoadIssue, newStatus: IssueStatus) {
+  function handleChangeStatus(issue: RoadIssue, newStatus: DbIssueStatus) {
     setStatusDropdownId(null);
     if (newStatus === issue.status) return;
     updateStatus.mutate({
@@ -130,9 +130,8 @@ export function AdminTable({ issues, isLoading }: AdminTableProps) {
           <TableRow>
             <TableHead>Image</TableHead>
             <TableHead>Title</TableHead>
-            <TableHead>Category</TableHead>
+            <TableHead>Severity</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead>Worker</TableHead>
             <TableHead>Date</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
@@ -140,7 +139,7 @@ export function AdminTable({ issues, isLoading }: AdminTableProps) {
         <TableBody>
           {filtered.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
+              <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
                 No issues found.
               </TableCell>
             </TableRow>
@@ -178,34 +177,24 @@ export function AdminTable({ issues, isLoading }: AdminTableProps) {
                       </p>
                     </div>
                   </TableCell>
-                  <TableCell className="text-sm">{issue.category}</TableCell>
+                  <TableCell className="text-sm capitalize">{issue.severity}</TableCell>
                   <TableCell>
                     <StatusBadge status={issue.status} />
-                  </TableCell>
-                  <TableCell className="text-sm">
-                    {issue.assigned_worker ? (
-                      <div>
-                        <p className="text-xs font-semibold text-emerald-700">Worker Assigned</p>
-                        <p className="text-sm font-medium text-slate-800">{issue.assigned_worker}</p>
-                      </div>
-                    ) : (
-                      <span className="text-muted-foreground">--</span>
-                    )}
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
                     {format(new Date(issue.created_at), "MMM d, yyyy")}
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-1.5">
-                      {issue.status === "Reported" && (
+                      {issue.status === "reported" && (
                         <Button
                           size="sm"
                           variant="outline"
                           className="h-8 text-xs text-blue-700"
-                          onClick={() => handleSubmitToNmc(issue)}
+                          onClick={() => handleSubmitForReview(issue)}
                         >
                           <Send className="h-3.5 w-3.5 mr-1" />
-                          Submit to NMC
+                          Mark In Review
                         </Button>
                       )}
                       {/* Status change dropdown */}
@@ -235,7 +224,7 @@ export function AdminTable({ issues, isLoading }: AdminTableProps) {
                                 }`}
                                 onClick={() => handleChangeStatus(issue, s)}
                               >
-                                {s}
+                                {ISSUE_STATUS_LABELS[s]}
                               </button>
                             ))}
                           </div>
@@ -259,7 +248,7 @@ export function AdminTable({ issues, isLoading }: AdminTableProps) {
                 </TableRow>
                 {expandedIssueId === issue.id && (
                   <TableRow key={`${issue.id}-activity`}>
-                    <TableCell colSpan={7} className="bg-slate-50/60 p-4">
+                    <TableCell colSpan={6} className="bg-slate-50/60 p-4">
                       <ActivityTimeline issueId={issue.id} />
                     </TableCell>
                   </TableRow>

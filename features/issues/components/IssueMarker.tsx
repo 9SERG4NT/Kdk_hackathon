@@ -4,6 +4,7 @@ import { Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import Image from "next/image";
 import type { RoadIssue } from "@/types";
+import { ISSUE_STATUS_LABELS, ISSUE_SEVERITY_LABELS } from "@/types";
 import { StatusBadge } from "./StatusBadge";
 
 const defaultIcon = new L.Icon({
@@ -30,7 +31,9 @@ export function IssueMarker({ issue }: IssueMarkerProps) {
             {issue.title}
           </h3>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-500">{issue.category}</span>
+            <span className="text-xs text-gray-500">
+              {ISSUE_SEVERITY_LABELS[issue.severity]}
+            </span>
             <StatusBadge status={issue.status} />
           </div>
           {issue.image_url && (
@@ -47,6 +50,9 @@ export function IssueMarker({ issue }: IssueMarkerProps) {
           <p className="text-xs text-gray-600 leading-relaxed">
             {issue.description}
           </p>
+          {issue.address && (
+            <p className="text-xs text-gray-500">{issue.address}</p>
+          )}
         </div>
       </Popup>
     </Marker>
