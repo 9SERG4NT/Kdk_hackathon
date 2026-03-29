@@ -55,12 +55,12 @@ to anon, authenticated
 using (true)
 with check (true);
 
--- Storage bucket for issue images
+-- Storage bucket for issue images (private; use signed URLs for access)
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values (
   'road-issue-images',
   'road-issue-images',
-  true,
+  false,
   5242880,
   array['image/jpeg', 'image/png', 'image/webp']
 )
@@ -70,16 +70,19 @@ set
   file_size_limit = excluded.file_size_limit,
   allowed_mime_types = excluded.allowed_mime_types;
 
--- Public read for storage objects
+-- Authenticated read for storage objects
 drop policy if exists "Public read for road images" on storage.objects;
-create policy "Public read for road images"
+create policy "Authenticated users can read road images"
 on storage.objects for select
-to anon, authenticated
+to authenticated
 using (bucket_id = 'road-issue-images');
 
--- Public upload for storage objects
+-- Authenticated upload scoped to per-user folder prefix
 drop policy if exists "Public upload for road images" on storage.objects;
-create policy "Public upload for road images"
+create policy "Authenticated users can upload road images"
 on storage.objects for insert
-to anon, authenticated
-with check (bucket_id = 'road-issue-images');
+to authenticated
+with check (
+  bucket_id = 'road-issue-images'
+  and (storage.foldername(name))[1] = auth.uid()::text
+);
